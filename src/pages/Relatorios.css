@@ -1,0 +1,296 @@
+.report-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+/* KPIs (Top Cards) */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.kpi-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 15px rgba(220, 190, 210, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-5px);
+}
+
+.kpi-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-icon-wrapper.pink { background-color: #fce8f0; color: var(--primary-pink); }
+.kpi-icon-wrapper.purple { background-color: #e6def9; color: var(--primary-purple); }
+.kpi-icon-wrapper.blue { background-color: #eef2fb; color: var(--primary-blue); }
+
+.kpi-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.kpi-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+/* Dashboard Bottom Grid */
+.report-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.report-panel {
+  padding: 1.5rem;
+  min-height: 400px;
+}
+
+/* Native CSS Progress Bars for Rankings */
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+.ranking-list::-webkit-scrollbar { width: 5px; }
+.ranking-list::-webkit-scrollbar-thumb { background: #e4cde5; border-radius: 4px; }
+
+.ranking-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rank-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rank-prof-name {
+  font-weight: 800;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.rank-prof-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.rank-prof-score {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+/* The Graphic Bar Component */
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background-color: var(--bg-color);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 1.5s var(--spring-easing);
+}
+
+/* Colors for threshold based progress */
+.fill-success { background: linear-gradient(90deg, #4ade80, #22c55e); }
+.fill-warning { background: linear-gradient(90deg, #facc15, #eab308); }
+.fill-danger { background: linear-gradient(90deg, #f87171, #ef4444); }
+
+.print-only-header {
+  display: none;
+}
+
+/* Print Mode Adjustments - Documento Formal A4 */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 1.5cm;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body, html, .main-layout, .main-content {
+    background-color: white !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #000 !important; /* Forçar fonte preta pro papel */
+  }
+
+  .sidebar, .btn-outline, .report-header, .cal-banner {
+    display: none !important;
+  }
+
+  .print-only-header {
+    display: block !important;
+    text-align: center;
+    border-bottom: 2px solid #000;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+  
+  .print-only-header h2 { font-size: 1.6rem; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 1px; }
+  .print-only-header h3 { font-size: 1.1rem; margin: 0.5rem 0; color: #444; }
+  .print-only-header p { font-size: 0.9rem; color: #666; margin: 0; }
+  
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .report-container {
+    padding: 0;
+    max-width: 100%;
+    width: 100%;
+    gap: 1.5rem;
+  }
+
+  /* Transmutar KPIs Cards em blocos de texto formal */
+  .kpi-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+    border-bottom: 1px solid #ddd !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .kpi-card {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem !important;
+    break-inside: avoid;
+    background: transparent !important;
+  }
+  
+  .kpi-icon-wrapper {
+    background: transparent !important;
+    border: 1px solid #aaa !important;
+    color: #333 !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .kpi-title {
+    color: #444 !important;
+    font-size: 0.75rem !important;
+  }
+
+  .kpi-value {
+    font-size: 1.8rem !important;
+    color: #000 !important;
+  }
+
+  /* Transmutar Layout Inferior em Lista Simples */
+  .report-grid-2 {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .report-panel {
+    min-height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    break-inside: avoid;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  
+  .report-panel h3, .report-panel h2 {
+    font-size: 1.2rem !important;
+    border-bottom: 1px solid #ccc !important;
+    padding-bottom: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    color: #000 !important;
+  }
+
+  .ranking-list {
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-right: 0 !important;
+    gap: 1rem !important;
+  }
+
+  .ranking-item {
+    border-bottom: 1px dashed #eee !important;
+    padding-bottom: 0.5rem !important;
+    break-inside: avoid;
+  }
+
+  .progress-track {
+    height: 10px !important;
+    margin-top: 0.3rem !important;
+    background-color: #f0f0f0 !important;
+  }
+  
+  .rank-prof-name {
+    font-size: 0.9rem !important;
+    color: #000 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .report-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .report-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}

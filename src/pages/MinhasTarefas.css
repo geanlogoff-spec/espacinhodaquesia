@@ -1,0 +1,203 @@
+/* Layout Grid for Tasks */
+.tasks-layout-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .tasks-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Forms & Inputs */
+.add-task-form {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.add-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.custom-input {
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-family);
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.custom-input:focus {
+  border-color: var(--primary-pink);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(244, 166, 200, 0.2);
+}
+
+.custom-select {
+  background-color: white;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-family);
+  font-weight: 700;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+.flex-1 {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Filters */
+.task-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 0.5rem;
+}
+
+.filter-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.3rem 0;
+  position: relative;
+}
+
+.filter-btn.active {
+  color: var(--primary-purple);
+}
+
+.filter-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-purple);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Task Item */
+.task-list.interactive li, .notes-list.interactive li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.task-list.interactive li.completed .task-text {
+  text-decoration: line-through;
+  color: var(--text-light);
+}
+
+.task-label {
+  flex: 1;
+}
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon-btn-delete {
+  background: transparent;
+  border: none;
+  color: #e0b4bc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.icon-btn-delete:hover {
+  background-color: #fdf0f2;
+  color: var(--danger-red);
+}
+
+/* Warnings */
+.warnings-card {
+  background: linear-gradient(135deg, #fdf5f9 0%, #faeef7 100%);
+  border: 1px dashed var(--primary-pink);
+  margin-bottom: 1.5rem;
+}
+
+.warnings-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.warnings-list li {
+  display: flex;
+  gap: 1rem;
+}
+
+.warning-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--warning-yellow);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.warning-icon.pink {
+  background-color: var(--danger-red);
+}
+
+.warnings-list strong {
+  color: var(--primary-purple);
+  font-size: 0.95rem;
+  display: block;
+}
+
+.warnings-list p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-light);
+  font-weight: 700;
+  background: #fcfafb;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--card-border);
+}
+
+/* Custom CSS for Note items */
+.note-item {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}

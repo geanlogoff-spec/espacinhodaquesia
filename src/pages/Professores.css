@@ -1,0 +1,343 @@
+.professores-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.professores-layout-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.professores-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* Card Style specific for Teacher row */
+.professor-card-item {
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s var(--smooth-easing);
+  background-color: white;
+}
+
+.professor-card-item:hover {
+  border-color: #f2e1ed;
+  box-shadow: 0 4px 14px rgba(220, 190, 210, 0.15);
+  transform: translateY(-2px);
+}
+
+.prof-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.prof-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.prof-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+  color: var(--primary-purple);
+  font-weight: 900;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.prof-name {
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.1rem;
+}
+
+.prof-subject {
+  color: var(--primary-pink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  background-color: #fff0f5;
+  padding: 0.1rem 0.6rem;
+  border-radius: var(--radius-pill);
+}
+
+.prof-actions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+/* Progress Section */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.progress-track {
+  width: 100%;
+  height: 12px;
+  background-color: var(--sidebar-bg);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 0.8s var(--spring-easing), background-color 0.4s ease;
+}
+
+.bg-primary { background: linear-gradient(90deg, #c3b0f5 0%, #a28dec 100%); }
+.bg-warning { background: linear-gradient(90deg, #fcd57e 0%, #f2b938 100%); }
+.bg-success { background: linear-gradient(90deg, #6bc27b 0%, #4fac60 100%); }
+
+.progress-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.percentage-text {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--text-main);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.status-badge.complete { color: var(--success-green); }
+.status-badge.warning { color: #d68f00; }
+.status-badge.normal { color: var(--text-light); }
+
+/* Badges de Turma e Turno */
+.prof-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin-left: 0.5rem;
+}
+.prof-badge.secondary {
+  background-color: var(--sidebar-bg);
+  color: var(--text-muted);
+}
+.prof-badge.outline {
+  border: 1px solid var(--border-color);
+  color: var(--text-light);
+}
+
+/* Modal do Professor */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.icon-btn-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.icon-btn-close:hover {
+  background-color: var(--bg-color);
+  color: var(--danger-red);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.add-prof-form-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.form-group.full-width {
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+.form-divider {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary-purple);
+  margin-top: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(195, 176, 245, 0.4);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Sidebar Stats */
+.mini-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 0;
+  border-bottom: 1px dashed rgba(195, 176, 245, 0.4);
+}
+.mini-stat.border-none { border-bottom: none; }
+
+.stat-label {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+.stat-number.green { color: var(--success-green); }
+.stat-number.purple { color: var(--primary-purple); }
+
+/* Animations para o Modal */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slideUpFade 0.4s var(--spring-easing) forwards;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 1024px) {
+  .professores-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .prof-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .prof-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}

@@ -11,11 +11,14 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
-  Users
+  Users,
+  LogOut
 } from 'lucide-react';
+import { AppContext } from '../context/AppContext';
 import './Sidebar.css';
 
 const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) => {
+  const { handleLogout } = useContext(AppContext);
   const menuItems = [
     { path: '/', name: 'Dashboard', icon: Home },
     { path: '/tarefas', name: 'Minhas Tarefas', icon: CheckSquare },
@@ -61,7 +64,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
       </nav>
 
       <div className="sidebar-footer">
-        <div className="decoration-stars">{isCollapsed ? '✨' : '✨ 🌟 ✨'}</div>
+        <button className="sidebar-logout-btn" onClick={handleLogout}>
+          <LogOut size={20} className="nav-icon" />
+          <span className="link-text">Sair do Sistema</span>
+        </button>
       </div>
     </aside>
   );

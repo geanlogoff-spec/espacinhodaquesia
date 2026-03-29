@@ -154,6 +154,45 @@
   color: var(--primary-pink);
   font-size: 1.2rem;
   transition: all 0.3s ease;
+  border-top: 1px dashed var(--card-border);
+  padding-top: 1rem;
+}
+
+.sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--danger-red);
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.sidebar.collapsed .sidebar-logout-btn {
+  padding: 1rem;
+  justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-logout-btn .link-text {
+  display: none;
+}
+
+.sidebar-logout-btn:hover {
+  background-color: #ffeef0;
+}
+
+.sidebar-logout-btn .nav-icon {
+  color: var(--danger-red);
+  min-width: 20px;
 }
 
 .desktop-only {

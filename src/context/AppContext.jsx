@@ -190,6 +190,8 @@ export const AppProvider = ({ children }) => {
     emoji: '👸'
   });
 
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
   const handleAtualizarPerfil = (novoPerfil) => {
     setPerfil(prev => ({ ...prev, ...novoPerfil }));
   };
@@ -234,6 +236,8 @@ export const AppProvider = ({ children }) => {
       handleRemoverArquivo,
       perfil,
       handleAtualizarPerfil,
+      isProfileModalOpen,
+      setIsProfileModalOpen,
       isLoggedIn,
       handleLogin,
       handleLogout

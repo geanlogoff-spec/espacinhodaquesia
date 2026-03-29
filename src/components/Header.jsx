@@ -6,10 +6,9 @@ import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { tarefas, eventos, perfil, handleAtualizarPerfil, handleLogout } = useContext(AppContext);
+  const { tarefas, eventos, perfil, handleAtualizarPerfil, handleLogout, isProfileModalOpen, setIsProfileModalOpen } = useContext(AppContext);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const notifRef = useRef(null);
   const settRef = useRef(null);
@@ -47,7 +46,7 @@ const Header = () => {
       tituloDaPlataforma: editTitulo,
       emoji: editEmoji
     });
-    setShowProfileModal(false);
+    setIsProfileModalOpen(false);
   };
 
   const openPortalInNewTab = () => {
@@ -131,7 +130,7 @@ const Header = () => {
               </div>
               <div className="dropdown-body">
                 <ul className="settings-list">
-                  <li className="settings-item" onClick={() => { setShowProfileModal(true); setShowSettings(false); }}>
+                  <li className="settings-item" onClick={() => { setIsProfileModalOpen(true); setShowSettings(false); }}>
                     <User size={16} /> Meu Perfil
                   </li>
                   <li className="settings-item" onClick={() => alert('Modo escuro será ativado em atualizações futuras!')}>
@@ -151,12 +150,12 @@ const Header = () => {
       </div>
 
       {/* Modal Profile Settings */}
-      {showProfileModal && (
+      {isProfileModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content animate-fade-in" style={{maxWidth: '450px'}}>
             <div className="modal-header">
               <h3>Identidade da Plataforma</h3>
-              <button className="close-btn" onClick={() => setShowProfileModal(false)}>&times;</button>
+              <button className="close-btn" onClick={() => setIsProfileModalOpen(false)}>&times;</button>
             </div>
             
             <form className="modal-body" onSubmit={handleSaveProfile} style={{display: 'flex', flexDirection: 'column', gap: '1.2rem'}}>
@@ -221,7 +220,7 @@ const Header = () => {
               </div>
 
               <div className="modal-actions" style={{marginTop: '1rem'}}>
-                <button type="button" className="btn btn-outline" onClick={() => setShowProfileModal(false)}>Cancelar</button>
+                <button type="button" className="btn btn-outline" onClick={() => setIsProfileModalOpen(false)}>Cancelar</button>
                 <button type="submit" className="btn btn-green"><Save size={16}/> Salvar Alterações</button>
               </div>
             </form>

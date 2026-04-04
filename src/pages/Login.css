@@ -2,180 +2,180 @@
   min-height: 100vh;
   width: 100vw;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-color);
-  padding: 1.5rem;
-}
-
-.login-container {
-  width: 100%;
-  max-width: 1000px;
-  min-height: 600px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-  display: flex;
+  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-pink) 100%);
   overflow: hidden;
 }
 
-/* Esquerda: Identidade */
+/* Esquerda: Identidade Fullscreen */
 .login-brand-side {
   flex: 1;
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-pink) 100%);
-  padding: 4rem 3rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+  padding: 4rem 5rem;
   color: white;
+  position: relative;
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .brand-content {
-  position: relative;
-  z-index: 2;
+  max-width: 80%;
+  margin-bottom: 2rem;
 }
 
 .brand-content h1 {
-  font-size: 2.8rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  line-height: 1.1;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.25;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.slogan {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  opacity: 0.9;
-  font-weight: 300;
-  max-width: 90%;
+/* Arte abstrata para substituir a ilustração */
+.illustration-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-.brand-footer {
-  position: absolute;
-  bottom: 2rem;
-  left: 3rem;
-  font-size: 0.85rem;
-  opacity: 0.7;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  z-index: 2;
-}
-
-/* Decorações Absolutas na Marca */
-.circle-decor {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  z-index: 1;
-}
-
-.circle-decor.c1 {
+.abstract-art {
+  position: relative;
   width: 300px;
   height: 300px;
-  top: -100px;
-  right: -100px;
 }
 
-.circle-decor.c2 {
-  width: 200px;
-  height: 200px;
-  bottom: -50px;
-  left: 50%;
+.abstract-art .shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Direita: Formulário */
+.circle-1 {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  top: 20px;
+  left: 20px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.square-1 {
+  width: 120px;
+  height: 120px;
+  border-radius: 20px;
+  bottom: 40px;
+  right: 20px;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+.triangle-1 {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 86px solid rgba(255, 255, 255, 0.2);
+  top: 100px;
+  right: 50px;
+  backdrop-filter: blur(5px);
+  animation: float 7s ease-in-out infinite 1s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* Direita: Formulário Card Redondo */
 .login-form-side {
   flex: 1;
-  padding: 4rem 3.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   background: white;
+  border-radius: 50px 0 0 50px; /* Bordas arredondadas apenas na esquerda */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+}
+
+.form-container {
+  width: 100%;
+  max-width: 400px;
 }
 
 .form-header {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .form-header h2 {
-  font-size: 2rem;
-  color: var(--primary-purple);
-  margin-bottom: 0.5rem;
-  font-weight: 800;
-}
-
-.form-header p {
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 2.2rem;
+  color: var(--primary-pink);
+  font-weight: 700;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.8rem;
 }
 
 .form-group-login {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group-login label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-main);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.input-icon-wrapper {
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
 }
 
-.input-icon {
-  position: absolute;
-  left: 1rem;
-  color: var(--text-muted);
-}
-
-.input-icon-wrapper input {
+.form-group-login input {
   width: 100%;
-  padding: 1rem 1rem 1rem 3rem;
-  border: 2px solid var(--card-border);
-  border-radius: var(--radius-md);
+  padding: 1rem 0 0.5rem 0;
+  border: none;
+  border-bottom: 1.5px solid #e0e0e0;
+  background: transparent;
   font-size: 1rem;
+  color: var(--text-main);
   outline: none;
-  transition: all 0.3s;
-  background-color: #fafbfc;
+  transition: border-color 0.3s ease;
 }
 
-.input-icon-wrapper input:focus {
-  border-color: var(--primary-pink);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(230, 87, 142, 0.1);
+.form-group-login input::placeholder {
+  color: #adb5bd;
+  font-weight: 500;
 }
 
-.forgot-password {
-  text-align: right;
-  margin-top: -0.5rem;
+.form-group-login input:focus {
+  border-bottom-color: var(--primary-pink);
 }
 
-.forgot-password span {
-  font-size: 0.85rem;
-  color: var(--primary-pink);
-  font-weight: 600;
+.password-toggle {
+  position: absolute;
+  right: 0;
+  bottom: 0.5rem;
+  background: none;
+  border: none;
+  color: #adb5bd;
   cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
 }
 
-.forgot-password span:hover {
-  text-decoration: underline;
+.password-toggle:hover {
+  color: var(--primary-pink);
 }
 
 .btn-auth {
@@ -183,17 +183,13 @@
   background: linear-gradient(135deg, var(--primary-pink) 0%, var(--primary-purple) 100%);
   color: white;
   border: none;
-  padding: 1.2rem;
+  padding: 1.1rem;
   border-radius: var(--radius-md);
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.2s;
   box-shadow: 0 4px 15px rgba(230, 87, 142, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-auth:hover {
@@ -201,62 +197,79 @@
   box-shadow: 0 6px 20px rgba(230, 87, 142, 0.4);
 }
 
-.btn-auth:active {
-  transform: translateY(0);
-}
-
 .btn-auth.loading {
   opacity: 0.8;
   cursor: not-allowed;
+  transform: none;
+}
+
+.signup-link {
+  font-size: 0.9rem;
+  color: #adb5bd;
+  text-align: left;
+  margin-top: 0.5rem;
+}
+
+.signup-link span {
+  color: var(--primary-pink);
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.signup-link span:hover {
+  opacity: 0.8;
 }
 
 .disclaimer-mock {
-  margin-top: 2rem;
+  margin-top: 4rem;
   text-align: center;
   font-size: 0.8rem;
   color: var(--text-light);
   font-style: italic;
-  background: var(--bg-color);
-  padding: 0.8rem;
-  border-radius: var(--radius-sm);
+  padding: 1rem;
 }
 
 /* Responsividade */
-@media (max-width: 850px) {
-  .login-container {
+@media (max-width: 900px) {
+  .login-wrapper {
     flex-direction: column;
-    min-height: auto;
   }
 
   .login-brand-side {
     padding: 3rem 2rem;
+    flex: none;
+    min-height: 40vh;
     align-items: center;
     text-align: center;
   }
-
-  .brand-footer {
-    position: relative;
-    bottom: 0;
-    left: 0;
-    margin-top: 2rem;
-  }
-
-  .login-form-side {
-    padding: 3rem 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-wrapper {
-    padding: 0;
-  }
-
-  .login-container {
-    border-radius: 0;
-    box-shadow: none;
+  
+  .brand-content {
+    max-width: 100%;
   }
 
   .brand-content h1 {
     font-size: 2.2rem;
+  }
+  
+  .illustration-placeholder {
+    display: none; /* Esconde a arte em telas pequenas para economizar espaço */
+  }
+
+  .login-form-side {
+    flex: 1;
+    border-radius: 40px 40px 0 0;
+    padding: 3rem 2rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .login-brand-side {
+    padding: 2rem 1.5rem;
   }
 }

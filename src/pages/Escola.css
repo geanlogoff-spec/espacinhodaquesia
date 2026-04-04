@@ -1,0 +1,333 @@
+/* Escola & Turmas Pages */
+.escola-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.escola-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.escola-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.escola-card-item {
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  transition: all 0.3s var(--smooth-easing);
+  background-color: white;
+}
+
+.escola-card-item:hover {
+  border-color: #f2e1ed;
+  box-shadow: 0 4px 14px rgba(220, 190, 210, 0.15);
+  transform: translateY(-2px);
+}
+
+.escola-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.escola-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.escola-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #daf0fb 0%, #b8e2f5 100%);
+  color: #5ba8cc;
+  font-weight: 900;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.escola-avatar.turma-avatar {
+  background: linear-gradient(135deg, #fef5de 0%, #fce8a8 100%);
+  color: #c48b04;
+}
+
+.escola-name {
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.1rem;
+}
+
+.escola-detail {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.escola-actions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.escola-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--card-border);
+  flex-wrap: wrap;
+}
+
+.escola-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.turma-badges {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.turma-capacidade {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  background: var(--sidebar-bg);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+}
+
+/* =====================
+   Discipline Picker
+   ===================== */
+.disc-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.disc-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.disc-picker-item.selected {
+  background: #faf8ff;
+  border-radius: var(--radius-md);
+  padding: 0.3rem 0.5rem;
+  margin: -0.3rem -0.5rem;
+}
+
+.disc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--card-border);
+  background: white;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.disc-chip:hover {
+  border-color: #c3b0f5;
+  color: var(--primary-purple);
+  background: #f8f4ff;
+}
+
+.disc-chip.selected {
+  border-color: #c3b0f5;
+  background: linear-gradient(135deg, #f3eeff 0%, #ece4ff 100%);
+  color: var(--primary-purple);
+}
+
+/* CH inline input */
+.disc-ch-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  animation: fadeSlideIn 0.2s ease;
+}
+
+.disc-ch-input {
+  width: 70px;
+  padding: 0.35rem 0.5rem;
+  border: 1.5px solid #d8cef0;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--primary-purple);
+  background: white;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.disc-ch-input:focus {
+  outline: none;
+  border-color: #c3b0f5;
+  box-shadow: 0 0 0 3px rgba(195, 176, 245, 0.15);
+}
+
+.disc-ch-input::placeholder {
+  color: #c4b5e0;
+  font-weight: 600;
+}
+
+.disc-ch-suffix {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Display chips on turma cards */
+.disciplinas-display {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--card-border);
+}
+
+.disc-label-icon {
+  color: var(--text-light);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.disc-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.disc-chip-small {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill);
+  background: #f3eeff;
+  color: var(--primary-purple);
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid #e5dcf7;
+}
+
+.ch-badge {
+  background: var(--primary-purple);
+  color: white;
+  padding: 0.05rem 0.35rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  margin-left: 0.15rem;
+}
+
+/* Edit button */
+.icon-btn-edit {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.icon-btn-edit:hover {
+  background: #eef6ff;
+  border-color: #90b8e0;
+  color: #4a8bc7;
+  transform: scale(1.08);
+}
+
+/* Escola vinculo badge */
+.escola-vinculo {
+  background: linear-gradient(135deg, #eaf5fc 0%, #daf0fb 100%);
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  color: #4a8bc7;
+  font-weight: 700;
+}
+
+/* Form hint box (no schools available) */
+.form-hint-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  background: #fef9e7;
+  border: 1px dashed #e6c94d;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9a7d1a;
+}
+
+.form-hint-box strong {
+  color: #7a6100;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .escola-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .escola-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .escola-meta {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
 import { AppContext } from '../context/AppContext';
@@ -31,13 +32,13 @@ const Sequencias = () => {
 
   // Helper Stats
   const entregues = entregas.reduce((acc, ent) => {
-      const count = Object.values(ent.statusProfessores).filter(s => s === 'entregue').length;
-      return acc + count;
+      const sv = ent.statusVinculos || {};
+      return acc + Object.values(sv).filter(s => s === 'entregue').length;
   }, 0);
   
   const pendentes = entregas.reduce((acc, ent) => {
-      const count = Object.values(ent.statusProfessores).filter(s => s === 'pendente').length;
-      return acc + count;
+      const sv = ent.statusVinculos || {};
+      return acc + Object.values(sv).filter(s => s === 'pendente').length;
   }, 0);
 
   return (
@@ -75,8 +76,9 @@ const Sequencias = () => {
              <div className="empty-state">Nenhuma entrega cadastrada ainda. Clique em "Nova Entrega" para começar.</div>
           ) : (
             entregas.map(entrega => {
-              const totalProfs = professores.length;
-              const entregouCount = Object.values(entrega.statusProfessores).filter(s => s === 'entregue').length;
+              const sv = entrega.statusVinculos || {};
+              const totalVinc = Object.keys(sv).length;
+              const entregouCount = Object.values(sv).filter(s => s === 'entregue').length;
               const isExpanded = expandedId === entrega.id;
 
               return (
@@ -89,7 +91,7 @@ const Sequencias = () => {
                     </div>
                     <div className="seq-acc-meta">
                       <div className="meta-item"><Calendar size={14}/> Prazo: <strong>{new Date(entrega.prazo).toLocaleDateString()}</strong></div>
-                      <div className="meta-item">Progresso: <strong>{entregouCount}/{totalProfs}</strong></div>
+                      <div className="meta-item">Progresso: <strong>{entregouCount}/{totalVinc}</strong></div>
                       <button className="icon-btn-delete" onClick={(e) => { e.stopPropagation(); handleRemoverEntrega(entrega.id); }}>
                          <Trash2 size={16}/>
                       </button>
@@ -113,25 +115,27 @@ const Sequencias = () => {
                         </thead>
                         <tbody>
                           {professores.map(prof => {
-                             const status = entrega.statusProfessores[prof.id];
-                             const isEntregue = status === 'entregue';
+                             const profKeys = Object.keys(sv).filter(k => k.startsWith(`${prof.id}|`));
+                             if (profKeys.length === 0) return null;
+                             const allEntregue = profKeys.every(k => sv[k] === 'entregue');
+                             const entregueCount = profKeys.filter(k => sv[k] === 'entregue').length;
                              return (
                                <tr key={prof.id}>
                                  <td style={{fontWeight: 700}}>{prof.nome}</td>
-                                 <td style={{color: 'var(--text-light)'}}>{prof.materia}</td>
+                                 <td style={{color: 'var(--text-light)'}}>{entregueCount}/{profKeys.length} disciplinas</td>
                                  <td>
-                                    {isEntregue ? (
-                                      <div className="status-label success"><Check size={14}/> Entregou</div>
+                                    {allEntregue ? (
+                                      <div className="status-label success"><Check size={14}/> Completo</div>
                                     ) : (
                                       <div className="status-label pending"><X size={14}/> Pendente</div>
                                     )}
                                  </td>
                                  <td>
                                     <button 
-                                      className={`btn btn-small ${isEntregue ? 'btn-outline' : 'btn-green'}`}
+                                      className={`btn btn-small ${allEntregue ? 'btn-outline' : 'btn-green'}`}
                                       onClick={() => toggleStatusProfessor(entrega.id, prof.id)}
                                     >
-                                      {isEntregue ? 'Desmarcar' : 'Marcar Entregue'}
+                                      {allEntregue ? 'Desmarcar Tudo' : 'Marcar Tudo'}
                                     </button>
                                  </td>
                                </tr>
@@ -154,7 +158,7 @@ const Sequencias = () => {
       </div>
 
       {/* Modal Nova Entrega */}
-      {showAddModal && (
+      {showAddModal && createPortal(
         <div className="modal-overlay animate-fade-in">
           <div className="modal-content animate-slide-up" style={{maxWidth: 500}}>
             <div className="modal-header">
@@ -188,7 +192,8 @@ const Sequencias = () => {
               </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 900px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -176,6 +176,7 @@
 .event-pill.meeting { background-color: #e6def9; color: #6347a2; }
 .event-pill.event { background-color: #fce8f0; color: #c42971; }
 .event-pill.school-activity { background-color: #fef5de; color: #c48b04; }
+.event-pill.holiday { background-color: #d1fae5; color: #047857; }
 .event-pill.other { background-color: #eef2fb; color: #4b6cb7; }
 
 .is-today {

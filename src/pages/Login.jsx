@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { Lock, Mail, ChevronRight, School } from 'lucide-react';
+import { Eye, EyeOff, School } from 'lucide-react';
 import './Login.css';
 
 const Login = () => {
@@ -10,6 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -26,64 +27,64 @@ const Login = () => {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-container animate-fade-in">
-        
-        {/* Lado Esquerdo - Branding / Slogan */}
-        <div className="login-brand-side">
-           <div className="brand-content">
-             <School size={48} color="white" style={{marginBottom: '1rem', opacity: 0.9}}/>
-             <h1>{perfil.tituloDaPlataforma} {perfil.nome}</h1>
-             <p className="slogan">"Simplificando a Gestão Pedagógica com Elegância e Praticidade."</p>
-           </div>
+    <div className="login-wrapper animate-fade-in">
+      
+      {/* Lado Esquerdo - Branding Inspirado na Imagem */}
+      <div className="login-brand-side">
+         <div className="brand-header">
+           <School size={36} color="white" />
+           <span className="brand-name">{perfil.tituloDaPlataforma} {perfil.nome}</span>
+         </div>
+         
+         <div className="brand-content">
+           <h1>Gerencie turmas, tarefas e a evolução pedagógica.</h1>
+         </div>
+         
+         {/* Espaço para ilustração estilo 3D (Substituído por arte CSS para evitar links quebrados) */}
+         <div className="illustration-placeholder">
+            <div className="abstract-art">
+               <div className="shape circle-1"></div>
+               <div className="shape square-1"></div>
+               <div className="shape triangle-1"></div>
+            </div>
+         </div>
+      </div>
+      
+      {/* Lado Direito - Formulário Clean (No Google/Facebook as requested) */}
+      <div className="login-form-side">
+         <div className="form-container">
            
-           <div className="brand-footer">
-             Painel Administrativo Restrito
-           </div>
-           
-           {/* Abstract Decoration */}
-           <div className="circle-decor c1"></div>
-           <div className="circle-decor c2"></div>
-        </div>
-        
-        {/* Lado Direito - Formulário */}
-        <div className="login-form-side">
            <div className="form-header">
-              <h2>Bem-vinda de volta! {perfil.emoji}</h2>
-              <p>Insira suas credenciais mágicas para acessar a coordenação.</p>
+              <h2>Bem-vinda!</h2>
            </div>
            
            <form className="auth-form" onSubmit={onSubmit}>
               <div className="form-group-login">
-                <label>E-mail Institucional</label>
-                <div className="input-icon-wrapper">
-                  <Mail size={18} className="input-icon" />
-                  <input 
-                    type="email" 
-                    placeholder="voce@escola.com.br"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
+                <input 
+                  type="email" 
+                  placeholder="Endereço de Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="form-group-login">
-                <label>Senha de Acesso</label>
-                <div className="input-icon-wrapper">
-                  <Lock size={18} className="input-icon" />
-                  <input 
-                    type="password" 
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="forgot-password">
-                <span>Esqueceu a senha?</span>
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  placeholder="Senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button 
+                  type="button" 
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex="-1"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
 
               <button 
@@ -91,18 +92,13 @@ const Login = () => {
                  className={`btn-auth ${isLoading ? 'loading' : ''}`}
                  disabled={isLoading}
               >
-                {isLoading ? 'Autenticando...' : (
-                  <>Destrancar Painel <ChevronRight size={18}/></>
-                )}
+                {isLoading ? 'Autenticando...' : 'Entrar na Conta'}
               </button>
            </form>
            
-           <div className="disclaimer-mock">
-             🔐 (Modo de Demonstração: Qualquer e-mail ou senha irá liberar o acesso.)
-           </div>
-        </div>
-
+         </div>
       </div>
+
     </div>
   );
 };

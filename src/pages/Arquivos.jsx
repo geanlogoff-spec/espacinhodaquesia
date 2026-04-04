@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { AppContext } from '../context/AppContext';
 import { Folder, Link as LinkIcon, Download, Search, Plus, Trash2, Copy, Share2, CheckCircle2 } from 'lucide-react';
@@ -137,7 +138,7 @@ const Arquivos = () => {
       </Card>
 
       {/* Modal Novo Link */}
-      {showModal && (
+      {showModal && createPortal(
         <div className="modal-overlay">
           <div className="modal-content animate-fade-in" style={{maxWidth: '500px'}}>
             <div className="modal-header">
@@ -182,7 +183,8 @@ const Arquivos = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

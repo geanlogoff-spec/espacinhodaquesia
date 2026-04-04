@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { AppContext } from '../context/AppContext';
-import { Search, Plus, Calendar as CalendarIcon, Star, MessageCircle, Folder, ChevronLeft, ChevronRight, BookOpen, X, Trash2, CheckSquare } from 'lucide-react';
+import { Search, Plus, Calendar as CalendarIcon, Star, MessageCircle, Folder, ChevronLeft, ChevronRight, BookOpen, X, Trash2, CheckSquare, Sun } from 'lucide-react';
 import './Calendario.css';
 
 const Calendario = () => {
@@ -9,7 +10,7 @@ const Calendario = () => {
 
   // States
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [filter, setFilter] = useState('Todos'); // 'Todos', 'Eventos', 'Reuniões', 'Atividades Escolares', 'Outros'
+  const [filter, setFilter] = useState('Todos'); // 'Todos', 'Eventos', 'Reuniões', 'Atividades Escolares', 'Feriados', 'Outros'
   const [searchTerm, setSearchTerm] = useState('');
   
   // Modal State
@@ -93,6 +94,7 @@ const Calendario = () => {
       case 'Reuniões': return { icon: <MessageCircle size={12}/>, colorClass: 'meeting', fill: 'var(--primary-blue)' };
       case 'Atividades Escolares': return { icon: <Folder size={12}/>, colorClass: 'school-activity', fill: 'var(--warning-yellow)' };
       case 'Eventos': return { icon: <Star size={12}/>, colorClass: 'event', fill: 'var(--primary-pink)' };
+      case 'Feriados': return { icon: <Sun size={12}/>, colorClass: 'holiday', fill: '#10b981' };
       case 'Tarefas': return { icon: <CheckSquare size={12}/>, colorClass: 'other', fill: '#8b5cf6' };
       case 'Outros': return { icon: <CalendarIcon size={12}/>, colorClass: 'other', fill: 'var(--primary-purple)' };
       default: return { icon: <Star size={12}/>, colorClass: 'event', fill: 'var(--primary-pink)' };
@@ -135,6 +137,9 @@ const Calendario = () => {
           </button>
           <button className={`tab-btn ${filter === 'Atividades Escolares' ? 'active' : ''}`} onClick={() => setFilter('Atividades Escolares')}>
             <Folder size={16} fill="var(--warning-yellow)" color="currentColor"/> Atividades Escolares
+          </button>
+          <button className={`tab-btn ${filter === 'Feriados' ? 'active' : ''}`} onClick={() => setFilter('Feriados')}>
+            <Sun size={16} fill="#10b981" color="currentColor"/> Feriados
           </button>
           <button className={`tab-btn ${filter === 'Outros' ? 'active' : ''}`} onClick={() => setFilter('Outros')}>
             <CalendarIcon size={16} fill="var(--primary-purple)" color="currentColor"/> Outros
@@ -226,7 +231,7 @@ const Calendario = () => {
       </div>
 
        {/* Modal Novo Evento */}
-       {showAddModal && (
+       {showAddModal && createPortal(
         <div className="modal-overlay animate-fade-in">
           <div className="modal-content animate-slide-up" style={{maxWidth: 450}}>
             <div className="modal-header">
@@ -246,6 +251,7 @@ const Calendario = () => {
                         <option value="Reuniões">Reunião</option>
                         <option value="Atividades Escolares">Atividade Escolar</option>
                         <option value="Eventos">Evento</option>
+                        <option value="Feriados">Feriado</option>
                         <option value="Outros">Outros</option>
                     </select>
                   </div>
@@ -261,7 +267,8 @@ const Calendario = () => {
               </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

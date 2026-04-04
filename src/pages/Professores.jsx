@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
 import { AppContext } from '../context/AppContext';
@@ -144,7 +145,7 @@ const Professores = () => {
       </div>
 
       {/* Modal de Cadastro */}
-      {showAddForm && (
+      {showAddForm && createPortal(
         <div className="modal-overlay animate-fade-in">
           <div className="modal-content animate-slide-up">
             <div className="modal-header">
@@ -201,7 +202,8 @@ const Professores = () => {
               </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -67,7 +67,15 @@
   color: var(--text-main);
   font-size: 1.1rem;
   font-weight: 800;
-  margin-bottom: 0.1rem;
+  margin: 0 0 0.1rem 0;
+  padding: 0;
+  line-height: 1.3;
+}
+
+.prof-info > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .prof-subject {
@@ -339,5 +347,702 @@
   .mobile-full-width {
     width: 100%;
     margin-top: 1rem;
+  }
+}
+
+/* Cadastro-specific styles */
+.prof-cadastro-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed var(--card-border);
+}
+
+.professores-summary-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 400px;
+}
+
+@media (max-width: 768px) {
+  .prof-cadastro-meta {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .professores-summary-row {
+    max-width: 100%;
+  }
+
+  .prof-association-row {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
+
+/* Professor association badges */
+.prof-association-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--card-border);
+}
+
+.prof-assoc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.prof-assoc-badge.escola {
+  background: linear-gradient(135deg, #eaf5fc 0%, #daf0fb 100%);
+  color: #4a8bc7;
+  border: 1px solid #c5e2f5;
+}
+
+.prof-assoc-badge.turma {
+  background: linear-gradient(135deg, #fef5de 0%, #fce8a8 100%);
+  color: #b08a10;
+  border: 1px solid #f0d86a;
+}
+
+.prof-assoc-badge.disc {
+  background: #f3eeff;
+  color: var(--primary-purple);
+  border: 1px solid #e5dcf7;
+}
+
+/* Cascade section */
+.cascade-section {
+  border-left: 3px solid #e5dcf7;
+  padding-left: 1rem;
+  margin-left: 0.25rem;
+}
+
+.label-hint {
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.chip-detail {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+/* =====================
+   Vinculo Builder (per-turma accordion)
+   ===================== */
+.vinculo-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vinculo-turma-block {
+  border: 1.5px solid var(--card-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.vinculo-turma-block.active {
+  border-color: #c3b0f5;
+  box-shadow: 0 2px 8px rgba(175, 153, 235, 0.12);
+}
+
+.vinculo-turma-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  transition: background 0.15s;
+}
+
+.vinculo-turma-header:hover {
+  background: #faf8ff;
+}
+
+.vinculo-turma-block.active .vinculo-turma-header {
+  background: linear-gradient(135deg, #faf8ff 0%, #f3eeff 100%);
+}
+
+.vinculo-turma-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.check-empty {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--card-border);
+}
+
+.check-active {
+  color: var(--success-green);
+}
+
+.vinculo-turma-name {
+  font-weight: 700;
+}
+
+.vinculo-turma-detail {
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  background: #f5f3fa;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.vinculo-disc-panel {
+  padding: 0.6rem 0.9rem 0.9rem;
+  background: #faf8ff;
+  border-top: 1px dashed #e5dcf7;
+}
+
+.vinculo-disc-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+/* =====================
+   Vinculos Display on Cards
+   ===================== */
+.prof-vinculos-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--card-border);
+}
+
+.prof-vinculo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.prof-vinculo-turma {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #b08a10;
+  background: linear-gradient(135deg, #fef5de 0%, #fce8a8 100%);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid #f0d86a;
+  flex-shrink: 0;
+}
+
+.prof-vinculo-discs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.prof-vinculo-empty {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .vinculo-turma-header {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.82rem;
+  }
+  
+  .vinculo-turma-left {
+    gap: 0.35rem;
+  }
+
+  .prof-vinculo-item {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
+
+/* =====================================================
+   CONTAGEM DE AULAS — Expandable Cards + Calendar
+   ===================================================== */
+
+.contagem-card {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.contagem-card.expanded {
+  border-color: #d9c7f5;
+  box-shadow: 0 4px 20px rgba(175, 153, 235, 0.12);
+}
+
+.contagem-prof-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.1rem 1.25rem;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.contagem-prof-header:hover {
+  background: #fdf8ff;
+}
+
+.contagem-card.expanded .contagem-prof-header {
+  background: linear-gradient(135deg, #faf8ff 0%, #f5f0ff 100%);
+  border-bottom: 1px solid #ece5f8;
+}
+
+.contagem-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-light);
+}
+
+.contagem-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f0eaff 0%, #e8dfff 100%);
+  color: var(--primary-purple);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+}
+
+.contagem-vinculos {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #fcfaff;
+}
+
+.contagem-vinculo-card {
+  background: white;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  transition: border-color 0.2s;
+}
+
+.contagem-vinculo-card:hover {
+  border-color: #d9c7f5;
+}
+
+.contagem-vinculo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.contagem-vinculo-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.contagem-turma {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #b08a10;
+  background: linear-gradient(135deg, #fef5de 0%, #fce8a8 100%);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid #f0d86a;
+}
+
+.contagem-disc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #7c5bbf;
+  background: linear-gradient(135deg, #f4eeff 0%, #e9ddff 100%);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid #d9c7f5;
+}
+
+/* Progress */
+.progress-section.compact {
+  padding: 0;
+  border: none;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.progress-track {
+  height: 8px;
+  background: #f0ecf5;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.6s var(--smooth-easing);
+}
+
+.progress-fill.bg-primary {
+  background: linear-gradient(90deg, #c3b0f5 0%, #af99eb 100%);
+}
+
+.progress-fill.bg-success {
+  background: linear-gradient(90deg, #6dd49e 0%, #34b76e 100%);
+}
+
+.progress-fill.bg-warning {
+  background: linear-gradient(90deg, #ffc966 0%, #f7a52a 100%);
+}
+
+.progress-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-pill);
+}
+
+.status-badge.complete {
+  color: #1d8348;
+  background: #e8f8f0;
+}
+
+.status-badge.warning {
+  color: #b86e00;
+  background: #fef6e6;
+}
+
+.status-badge.normal {
+  color: var(--text-light);
+  background: #f5f0ff;
+}
+
+.percentage-text {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.btn-small {
+  font-size: 0.78rem !important;
+  padding: 0.35rem 0.8rem !important;
+  gap: 0.3rem !important;
+}
+
+/* =====================
+   CALENDAR
+   ===================== */
+.aula-calendar {
+  margin-bottom: 1.2rem;
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.cal-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--card-border);
+  background: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  color: var(--text-dark);
+}
+
+.cal-nav-btn:hover {
+  background: #f5f0ff;
+  border-color: #d9c7f5;
+}
+
+.cal-nav-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-dow {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--text-light);
+  padding: 0.4rem 0;
+  text-transform: uppercase;
+}
+
+.cal-cell {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: #faf8ff;
+  cursor: pointer;
+  color: var(--text-dark);
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.cal-cell.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.cal-cell:not(.empty):hover {
+  background: #ece5f8;
+  transform: scale(1.08);
+}
+
+.cal-cell.today {
+  border: 2px solid var(--primary-pink);
+  font-weight: 800;
+}
+
+.cal-cell.marked {
+  background: linear-gradient(135deg, #d1fae5 0%, #bbf7d0 100%);
+  color: #15803d;
+  font-weight: 800;
+}
+
+.cal-cell.marked:hover {
+  background: #a7f3d0;
+  cursor: default;
+}
+
+.cal-dot {
+  position: absolute;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #15803d;
+}
+
+.cal-legend {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--card-border);
+}
+
+.cal-legend span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  color: var(--text-light);
+}
+
+.cal-dot-legend {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.cal-dot-legend.marked {
+  background: #15803d;
+}
+
+.cal-dot-legend.today {
+  border: 2px solid var(--primary-pink);
+}
+
+.cal-modal-subtitle {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* Inline add aula form */
+.add-aula-form {
+  border: 1.5px dashed #c3b0f5;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin: 0.8rem 0;
+  background: #faf8ff;
+}
+
+/* Aula History */
+.aula-history {
+  margin-top: 1rem;
+  border-top: 1px solid var(--card-border);
+  padding-top: 0.8rem;
+}
+
+.aula-history-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 0.6rem;
+}
+
+.aula-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.aula-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius-sm);
+  background: #faf8ff;
+  transition: background 0.15s;
+}
+
+.aula-history-item:hover {
+  background: #f0eaff;
+}
+
+.aula-history-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+}
+
+.aula-history-date {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--text-dark);
+}
+
+.aula-history-obs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  background: #f5f0ff;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aula-history-delete {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #ccc;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+
+.aula-history-delete:hover {
+  color: #e74c5e;
+  background: #fef2f2;
+}
+
+@media (max-width: 768px) {
+  .contagem-prof-header {
+    padding: 0.9rem 1rem;
+  }
+
+  .contagem-vinculos {
+    padding: 0.8rem;
+  }
+
+  .contagem-vinculo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .contagem-vinculo-card {
+    padding: 0.7rem;
+  }
+
+  .cal-cell {
+    font-size: 0.75rem;
+  }
+
+  .aula-history-obs {
+    max-width: 120px;
   }
 }

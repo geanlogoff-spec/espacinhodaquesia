@@ -2,6 +2,7 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
+  overflow-x: hidden;
 }
 
 .layout-content {
@@ -10,19 +11,22 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  transition: margin-left 0.3s ease;
+  width: calc(100% - var(--sidebar-width));
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
 .layout-content.collapsed {
   margin-left: 80px;
+  width: calc(100% - 80px);
 }
 
 .main-content {
   flex: 1;
   padding: 0 2rem 2rem 2rem;
-  max-width: 1600px;
+  max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .mobile-overlay {
@@ -64,6 +68,7 @@
 @media (max-width: 1024px) {
   .layout-content {
     margin-left: 0 !important;
+    width: 100% !important;
   }
   
   .mobile-header-toggle {
@@ -72,11 +77,16 @@
   
   .main-content {
     padding: 1rem;
+    max-width: 100%;
   }
 }
 
 @media (max-width: 768px) {
   .desktop-header-wrapper {
     display: none;
+  }
+
+  .main-content {
+    padding: 0.75rem;
   }
 }

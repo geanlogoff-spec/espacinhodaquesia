@@ -20,7 +20,7 @@ const Dashboard = () => {
   // Última Sequência Ativa
   const ultimaEntrega = entregas.length > 0 ? entregas[0] : null;
   const pendenciasUltima = ultimaEntrega
-    ? Object.values(ultimaEntrega.statusProfessores).filter(s => s === 'pendente').length
+    ? Object.values(ultimaEntrega.statusVinculos || {}).filter(s => s === 'pendente').length
     : 0;
 
   // Calendário Matemático para HOJE
@@ -118,26 +118,28 @@ const Dashboard = () => {
                   </tr>
                 ) : (
                   professores.map(prof => {
-                     const status = ultimaEntrega.statusProfessores[prof.id];
-                     const isEntregue = status === 'entregue';
+                     const sv = ultimaEntrega.statusVinculos || {};
+                     const profKeys = Object.keys(sv).filter(k => k.startsWith(`${prof.id}|`));
+                     if (profKeys.length === 0) return null;
+                     const allEntregue = profKeys.every(k => sv[k] === 'entregue');
+                     const entregueCount = profKeys.filter(k => sv[k] === 'entregue').length;
                      return (
                        <tr key={prof.id}>
                           <td>{prof.nome}</td>
-                          <td><Badge type="light">{prof.materia}</Badge></td>
+                          <td><Badge type="light">{entregueCount}/{profKeys.length} disc.</Badge></td>
                           <td>
-                             {isEntregue ? (
-                                <div className="status-label success"><Check size={14}/> Entregue</div>
+                             {allEntregue ? (
+                                <div className="status-label success"><Check size={14}/> Completo</div>
                              ) : (
                                 <div className="status-label warning"><XCircle size={14}/> Pendente</div>
                              )}
                           </td>
                           <td>
-                             {/* Botão mágico na Dashboard pra trocar o check */}
                              <button 
-                                className={`btn btn-small ${isEntregue ? 'btn-outline' : 'btn-green'}`} 
+                                className={`btn btn-small ${allEntregue ? 'btn-outline' : 'btn-green'}`} 
                                 onClick={() => toggleStatusProfessor(ultimaEntrega.id, prof.id)}
                               >
-                                {isEntregue ? 'Desfazer' : 'Confirmar'}
+                                {allEntregue ? 'Desfazer' : 'Confirmar Tudo'}
                              </button>
                           </td>
                        </tr>

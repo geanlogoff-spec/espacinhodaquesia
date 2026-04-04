@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -17,7 +17,7 @@
 /* KPIs (Top Cards) */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
 }
 
@@ -46,9 +46,10 @@
   justify-content: center;
 }
 
-.kpi-icon-wrapper.pink { background-color: #fce8f0; color: var(--primary-pink); }
-.kpi-icon-wrapper.purple { background-color: #e6def9; color: var(--primary-purple); }
-.kpi-icon-wrapper.blue { background-color: #eef2fb; color: var(--primary-blue); }
+.kpi-green { background-color: #d1fae5; color: #059669; }
+.kpi-yellow { background-color: #fef08a; color: #ca8a04; }
+.kpi-pink { background-color: #fce8f0; color: var(--primary-pink); }
+.kpi-purple { background-color: #e6def9; color: var(--primary-purple); }
 
 .kpi-info {
   display: flex;
@@ -71,6 +72,77 @@
   line-height: 1;
 }
 
+/* Visão Macro - SD Panel */
+.macro-sd-panel {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 15px rgba(220, 190, 210, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.macro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.macro-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--primary-purple);
+  font-weight: 800;
+}
+.macro-badge {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  font-weight: 800;
+  color: white;
+  font-size: 1rem;
+}
+
+.macro-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: var(--bg-color);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.macro-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 1.5s var(--spring-easing);
+}
+
+.macro-stats-row {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px dashed var(--card-border);
+  padding-top: 1.5rem;
+}
+
+.macro-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.stat-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.stat-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+
 /* Dashboard Bottom Grid */
 .report-grid-2 {
   display: grid;
@@ -79,7 +151,6 @@
 }
 
 .report-panel {
-  padding: 1.5rem;
   min-height: 400px;
 }
 
@@ -88,13 +159,20 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   max-height: 350px;
   overflow-y: auto;
   padding-right: 0.5rem;
 }
 .ranking-list::-webkit-scrollbar { width: 5px; }
 .ranking-list::-webkit-scrollbar-thumb { background: #e4cde5; border-radius: 4px; }
+
+.empty-report {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 2rem;
+}
 
 .ranking-item {
   display: flex;
@@ -106,6 +184,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.rank-prof-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
 }
 
 .rank-prof-name {
@@ -125,6 +209,13 @@
   font-size: 0.9rem;
 }
 
+.score-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  color: white;
+  font-size: 0.8rem;
+}
+
 /* The Graphic Bar Component */
 .progress-track {
   width: 100%;
@@ -140,149 +231,187 @@
   transition: width 1.5s var(--spring-easing);
 }
 
-/* Colors for threshold based progress */
-.fill-success { background: linear-gradient(90deg, #4ade80, #22c55e); }
-.fill-warning { background: linear-gradient(90deg, #facc15, #eab308); }
-.fill-danger { background: linear-gradient(90deg, #f87171, #ef4444); }
+/* Gradients para barras e badges */
+.success-gradient { background: linear-gradient(90deg, #4ade80, #10b981); }
+.warning-gradient { background: linear-gradient(90deg, #facc15, #eab308); }
+.danger-gradient { background: linear-gradient(90deg, #f87171, #ef4444); }
+.purple-gradient { background: linear-gradient(90deg, var(--primary-purple), #9370db); }
 
 .print-only-header {
   display: none;
 }
 
-/* Print Mode Adjustments - Documento Formal A4 */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 1.5cm;
+    margin: 10mm 15mm;
   }
   
-  * {
+  *, *::before, *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  body, html, .main-layout, .main-content {
+  body, html, #root, .layout-container, .layout-content, .main-content {
     background-color: white !important;
     height: auto !important;
+    min-height: auto !important;
     overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
-    color: #000 !important; /* Forçar fonte preta pro papel */
+    position: static !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    display: block !important; /* Extremely important: disables flex layout wrapping that causes print screenshots */
   }
 
-  .sidebar, .btn-outline, .report-header, .cal-banner {
+  /* Ocultar UI que não vai pro papel */
+  .sidebar, .mobile-header-toggle, .desktop-header-wrapper, .print-btn, .report-header, .header-container {
     display: none !important;
   }
 
+  /* Exibir Cabeçalho de Impressão de forma elegante */
   .print-only-header {
-    display: block !important;
-    text-align: center;
-    border-bottom: 2px solid #000;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 3px double #333;
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    text-align: center;
+    page-break-after: avoid;
   }
+  .print-logo-circle { margin-bottom: 10px; color: #1f2937; }
+  .print-only-header h2 { font-size: 1.8rem; margin: 0; color: #111; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+  .print-only-header h3 { font-size: 1.2rem; margin: 0.5rem 0 1.5rem 0; color: var(--primary-purple); font-weight: 700; }
   
-  .print-only-header h2 { font-size: 1.6rem; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 1px; }
-  .print-only-header h3 { font-size: 1.1rem; margin: 0.5rem 0; color: #444; }
-  .print-only-header p { font-size: 0.9rem; color: #666; margin: 0; }
-  
-  .main-content {
-    margin-left: 0 !important;
-    width: 100% !important;
+  .print-meta-grid { 
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%; 
+    font-size: 0.95rem; 
+    color: #374151; 
+    background: #f8fafc;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
   }
+  .print-only-header p { margin: 0; }
+  .print-only-header hr { display: none; } /* Ocultado pois a borda dupla acima já faz o design */
 
   .report-container {
     padding: 0;
     max-width: 100%;
     width: 100%;
-    gap: 1.5rem;
+    gap: 2rem;
+    display: block !important;
   }
 
-  /* Transmutar KPIs Cards em blocos de texto formal */
+  /* Transmutar KPIs Cards em blocos premium */
   .kpi-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
     gap: 1rem !important;
-    border-bottom: 1px solid #ddd !important;
-    padding-bottom: 1.5rem !important;
-  }
-
-  .kpi-card {
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem !important;
-    break-inside: avoid;
-    background: transparent !important;
+    margin-bottom: 2rem !important;
   }
   
+  .kpi-card {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    padding: 1rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.5rem !important;
+    background: #ffffff !important;
+    flex: 1 !important;
+    page-break-inside: avoid;
+  }
+
   .kpi-icon-wrapper {
     background: transparent !important;
-    border: 1px solid #aaa !important;
-    color: #333 !important;
-    width: 40px !important;
-    height: 40px !important;
+    border: 2px solid currentColor !important;
+    width: 45px !important;
+    height: 45px !important;
+    margin-bottom: 5px;
   }
 
-  .kpi-title {
-    color: #444 !important;
-    font-size: 0.75rem !important;
+  .kpi-title { color: #64748b !important; font-size: 0.70rem !important; font-weight: 800 !important; }
+  .kpi-value { font-size: 1.8rem !important; color: #0f172a !important; }
+
+  /* Macro SD - Painel de termômetro de entrega */
+  .macro-sd-panel {
+    padding: 1.5rem !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #fdfafc !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    margin-bottom: 2rem !important;
+    page-break-inside: avoid;
+  }
+  .macro-header h3 { font-size: 1.2rem !important; color: #1e293b !important; }
+  .macro-badge { font-size: 0.9rem !important; border: 1px solid transparent !important; }
+
+  .macro-stats-row {
+    border-top: 1px dashed #cbd5e1 !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
   }
 
-  .kpi-value {
-    font-size: 1.8rem !important;
-    color: #000 !important;
-  }
-
-  /* Transmutar Layout Inferior em Lista Simples */
+  /* Ajustes Listas e Grids: Quebrando para Coluna vertical no papel evita texto espremido */
   .report-grid-2 {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2.5rem !important;
   }
 
   .report-panel {
     min-height: auto !important;
     box-shadow: none !important;
-    border: none !important;
-    break-inside: avoid;
-    padding: 0 !important;
-    background: transparent !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 1.5rem !important;
+    background: white !important;
+    page-break-inside: avoid;
+    border-radius: 8px !important;
   }
   
-  .report-panel h3, .report-panel h2 {
-    font-size: 1.2rem !important;
-    border-bottom: 1px solid #ccc !important;
-    padding-bottom: 0.5rem !important;
-    margin-bottom: 1rem !important;
-    color: #000 !important;
+  .report-panel h2 {
+    font-size: 1.3rem !important;
+    border-bottom: 2px solid #f1f5f9 !important;
+    padding-bottom: 0.8rem !important;
+    margin-bottom: 1.5rem !important;
+    color: #0f172a !important;
+    font-weight: 800 !important;
   }
 
   .ranking-list {
     max-height: none !important;
     overflow-y: visible !important;
     padding-right: 0 !important;
-    gap: 1rem !important;
+    gap: 1.2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .ranking-item {
-    border-bottom: 1px dashed #eee !important;
-    padding-bottom: 0.5rem !important;
-    break-inside: avoid;
+    border-bottom: 1px dashed #f1f5f9 !important;
+    padding-bottom: 0.8rem !important;
+    page-break-inside: avoid;
   }
 
   .progress-track {
-    height: 10px !important;
-    margin-top: 0.3rem !important;
-    background-color: #f0f0f0 !important;
+    height: 14px !important;
+    margin-top: 0.5rem !important;
+    background-color: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
   }
   
-  .rank-prof-name {
-    font-size: 0.9rem !important;
-    color: #000 !important;
-  }
+  .rank-prof-name { font-size: 1.05rem !important; color: #1e293b !important; font-weight: 800 !important;}
+  .rank-prof-meta { font-size: 0.85rem !important; color: #64748b !important; }
 }
 
 @media (max-width: 768px) {
@@ -292,5 +421,9 @@
   }
   .report-grid-2 {
     grid-template-columns: 1fr;
+  }
+  .macro-stats-row {
+     flex-direction: column;
+     gap: 1.5rem;
   }
 }

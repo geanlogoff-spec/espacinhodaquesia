@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Bell, Settings, LogOut, Moon, User, AlertCircle, Save, ExternalLink } from 'lucide-react';
 import { AppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
@@ -150,7 +151,7 @@ const Header = () => {
       </div>
 
       {/* Modal Profile Settings */}
-      {isProfileModalOpen && (
+      {isProfileModalOpen && createPortal(
         <div className="modal-overlay">
           <div className="modal-content animate-fade-in" style={{maxWidth: '450px'}}>
             <div className="modal-header">
@@ -226,7 +227,8 @@ const Header = () => {
             </form>
 
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </header>

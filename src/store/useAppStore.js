@@ -9,8 +9,8 @@ function buildProfessorFlat(prof, vinculos, registroAulas) {
   const turmaMap = {};
   const vinculoIdToKey = {};
   (vinculos || []).forEach(v => {
-    const turmaId = v.turma_disciplina?.turma_id;
-    const discNome = v.turma_disciplina?.nome;
+    const turmaId = v.turma_disciplinas?.turma_id;
+    const discNome = v.turma_disciplinas?.nome;
     if (!turmaId || !discNome) return;
     if (!turmaMap[turmaId]) turmaMap[turmaId] = [];
     turmaMap[turmaId].push(discNome);
@@ -54,8 +54,8 @@ function buildEntregaFlat(entrega, statusList, allVinculos) {
     const vinculo = allVinculos.find(v => v.id === es.vinculo_id);
     if (!vinculo) return;
     const profId = vinculo.professor_id;
-    const turmaId = vinculo.turma_disciplina?.turma_id;
-    const discNome = vinculo.turma_disciplina?.nome;
+    const turmaId = vinculo.turma_disciplinas?.turma_id;
+    const discNome = vinculo.turma_disciplinas?.nome;
     if (!profId || !turmaId || !discNome) return;
     statusVinculos[`${profId}|${turmaId}|${discNome}`] = es.status;
   });
@@ -497,7 +497,7 @@ export const useAppStore = create((set, get) => ({
     const turmas = get().turmas;
     const vinculosToInsert = [];
     (newProf.vinculos || []).forEach(v => {
-      const turma = turmas.find(t => t.id === v.turmaId);
+      const turma = turmas.find(t => String(t.id) === String(v.turmaId));
       if (!turma) return;
       (v.disciplinas || []).forEach(discNome => {
         const disc = turma.disciplinas.find(d => d.nome === discNome);
@@ -511,7 +511,11 @@ export const useAppStore = create((set, get) => ({
     });
 
     if (vinculosToInsert.length > 0) {
-      const { data: vinculoData } = await supabase.from('professor_vinculos').insert(vinculosToInsert).select('*, turma_disciplinas(*)');
+      console.log("handleAddProf - Iniciando inclusão em professor_vinculos:", vinculosToInsert);
+      const { data: vinculoData, error: vinculoError } = await supabase.from('professor_vinculos').insert(vinculosToInsert).select('*, turma_disciplinas(*)');
+      if (vinculoError) {
+        console.error("handleAddProf - Erro ao inserir professor_vinculos:", vinculoError);
+      }
       
       // 3. Add this professor's vinculos to all existing entregas as 'pendente'
       const entregas = get().entregas;
@@ -554,7 +558,7 @@ export const useAppStore = create((set, get) => ({
       const turmas = get().turmas;
       const vinculosToInsert = [];
       updatedData.vinculos.forEach(v => {
-        const turma = turmas.find(t => t.id === v.turmaId);
+        const turma = turmas.find(t => String(t.id) === String(v.turmaId));
         if (!turma) return;
         (v.disciplinas || []).forEach(discNome => {
           const disc = turma.disciplinas.find(d => d.nome === discNome);
@@ -567,8 +571,12 @@ export const useAppStore = create((set, get) => ({
         });
       });
 
+      console.log("handleEditProf - vinculosToInsert:", vinculosToInsert);
       if (vinculosToInsert.length > 0) {
-        await supabase.from('professor_vinculos').insert(vinculosToInsert);
+        const { error: vinculoError } = await supabase.from('professor_vinculos').insert(vinculosToInsert);
+        if (vinculoError) {
+            console.error("handleEditProf - Erro ao inserir professor_vinculos:", vinculoError);
+        }
       }
     }
 
@@ -589,7 +597,7 @@ export const useAppStore = create((set, get) => ({
     if (!prof) return;
 
     const vinculo = (prof._vinculos || []).find(v => {
-      const key = `${v.turma_disciplina?.turma_id}|${v.turma_disciplina?.nome}`;
+      const key = `${v.turma_disciplinas?.turma_id}|${v.turma_disciplinas?.nome}`;
       return key === chave;
     });
     if (!vinculo) return;
@@ -675,8 +683,8 @@ export const useAppStore = create((set, get) => ({
     const allVinculos = get()._allVinculos;
     const vinculo = allVinculos.find(v =>
       v.professor_id === profId &&
-      v.turma_disciplina?.turma_id === turmaId &&
-      v.turma_disciplina?.nome === discNome
+      v.turma_disciplinas?.turma_id === turmaId &&
+      v.turma_disciplinas?.nome === discNome
     );
     if (!vinculo) return;
 

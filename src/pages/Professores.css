@@ -368,6 +368,46 @@
   margin-bottom: 0.4rem;
 }
 
+.disc-picker-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.disc-picker-item {
+  display: inline-flex;
+}
+
+.disc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--card-border);
+  background-color: white;
+  color: var(--text-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--smooth-easing);
+  font-family: inherit;
+}
+
+.disc-chip:hover {
+  background-color: #faf8ff;
+  border-color: #d9c7f5;
+  color: var(--primary-purple);
+}
+
+.disc-chip.selected {
+  background: linear-gradient(135deg, #f0eaff 0%, #eaddff 100%);
+  border-color: #c3b0f5;
+  color: var(--primary-purple);
+  font-weight: 800;
+}
+
 /* =====================
    Vinculos Display on Cards
    ===================== */

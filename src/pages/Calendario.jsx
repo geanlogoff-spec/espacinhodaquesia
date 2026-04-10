@@ -2,11 +2,11 @@ import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
-import { Search, Plus, Calendar as CalendarIcon, Star, MessageCircle, Folder, ChevronLeft, ChevronRight, BookOpen, X, Trash2, CheckSquare, Sun } from 'lucide-react';
+import { Search, Plus, Calendar as CalendarIcon, Star, MessageCircle, Folder, ChevronLeft, ChevronRight, BookOpen, X, Trash2, CheckSquare, Sun, Cake } from 'lucide-react';
 import './Calendario.css';
 
 const Calendario = () => {
-  const { eventos, handleAddEvento, handleRemoverEvento } = useAppStore();
+  const { eventos, handleAddEvento, handleRemoverEvento, professores = [] } = useAppStore();
 
   // States
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -54,8 +54,29 @@ const Calendario = () => {
     calendarCells.push({ day: j, current: false });
   }
 
+  // Generate Birthday Events
+  const aniversarioEvents = [];
+  professores.filter(p => p.dataAniversario).forEach(prof => {
+    const parts = prof.dataAniversario.split('-');
+    if (parts.length === 3) {
+      const month = parts[1];
+      const day = parts[2];
+      [-1, 0, 1].forEach(offset => {
+        aniversarioEvents.push({
+          id: `aniv-${prof.id}-${currentYear + offset}`,
+          titulo: `Aniversário: ${prof.nome}`,
+          data: `${currentYear + offset}-${month}-${day}`,
+          tipo: 'Aniversários',
+          isAuto: true
+        });
+      });
+    }
+  });
+
+  const allEvents = [...eventos, ...aniversarioEvents];
+
   // Filter Events Logic
-  const filteredEventos = eventos.filter(ev => {
+  const filteredEventos = allEvents.filter(ev => {
     const matchesFilter = filter === 'Todos' || ev.tipo === filter;
     const matchesSearch = ev.titulo.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
@@ -94,6 +115,7 @@ const Calendario = () => {
       case 'Reuniões': return { icon: <MessageCircle size={12}/>, colorClass: 'meeting', fill: 'var(--primary-blue)' };
       case 'Atividades Escolares': return { icon: <Folder size={12}/>, colorClass: 'school-activity', fill: 'var(--warning-yellow)' };
       case 'Eventos': return { icon: <Star size={12}/>, colorClass: 'event', fill: 'var(--primary-pink)' };
+      case 'Aniversários': return { icon: <Cake size={12}/>, colorClass: 'event', fill: 'var(--primary-pink)' };
       case 'Feriados': return { icon: <Sun size={12}/>, colorClass: 'holiday', fill: '#10b981' };
       case 'Tarefas': return { icon: <CheckSquare size={12}/>, colorClass: 'other', fill: '#8b5cf6' };
       case 'Outros': return { icon: <CalendarIcon size={12}/>, colorClass: 'other', fill: 'var(--primary-purple)' };
@@ -140,6 +162,9 @@ const Calendario = () => {
           </button>
           <button className={`tab-btn ${filter === 'Feriados' ? 'active' : ''}`} onClick={() => setFilter('Feriados')}>
             <Sun size={16} fill="#10b981" color="currentColor"/> Feriados
+          </button>
+          <button className={`tab-btn ${filter === 'Aniversários' ? 'active' : ''}`} onClick={() => setFilter('Aniversários')}>
+            <Cake size={16} fill="var(--primary-pink)" color="currentColor"/> Aniversários
           </button>
           <button className={`tab-btn ${filter === 'Outros' ? 'active' : ''}`} onClick={() => setFilter('Outros')}>
             <CalendarIcon size={16} fill="var(--primary-purple)" color="currentColor"/> Outros
@@ -214,9 +239,11 @@ const Calendario = () => {
                        <span className="event-name">{ev.titulo}</span>
                        <span className="event-type-mute">{ev.tipo}</span>
                     </div>
-                    <button className="icon-btn-delete" style={{marginLeft: 'auto'}} onClick={() => handleRemoverEvento(ev.id)}>
-                      <Trash2 size={16}/>
-                    </button>
+                    {!ev.isAuto && (
+                      <button className="icon-btn-delete" style={{marginLeft: 'auto'}} onClick={() => handleRemoverEvento(ev.id)}>
+                        <Trash2 size={16}/>
+                      </button>
+                    )}
                  </div>
                );
              })

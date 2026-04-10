@@ -84,8 +84,12 @@ const ProfessoresContagem = () => {
   }, [activeVinculo, professores]);
 
   // Aulas dates for calendar marking
-  const aulaDatesSet = useMemo(() => {
-    return new Set(activeAulas.map(a => a.data));
+  const aulaDatesCount = useMemo(() => {
+    const counts = {};
+    activeAulas.forEach(a => {
+      counts[a.data] = (counts[a.data] || 0) + 1;
+    });
+    return counts;
   }, [activeAulas]);
 
   // Calendar grid
@@ -110,7 +114,6 @@ const ProfessoresContagem = () => {
   const handleCalendarDayClick = (day) => {
     if (!day) return;
     const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    if (aulaDatesSet.has(dateStr)) return; // Already has a lesson
     setNewAula({ data: dateStr, observacao: '' });
     setShowAddAula(true);
   };
@@ -254,7 +257,8 @@ const ProfessoresContagem = () => {
                   {calendarGrid.map((day, i) => {
                     if (day === null) return <div key={`e${i}`} className="cal-cell empty" />;
                     const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const hasAula = aulaDatesSet.has(dateStr);
+                    const aulasCount = aulaDatesCount[dateStr] || 0;
+                    const hasAula = aulasCount > 0;
                     const isToday = dateStr === new Date().toISOString().split('T')[0];
                     return (
                       <button
@@ -262,10 +266,10 @@ const ProfessoresContagem = () => {
                         type="button"
                         className={`cal-cell ${hasAula ? 'marked' : ''} ${isToday ? 'today' : ''}`}
                         onClick={() => handleCalendarDayClick(day)}
-                        title={hasAula ? 'Aula registrada' : 'Clique para registrar'}
+                        title={hasAula ? `${aulasCount} aula(s) registrada(s)` : 'Clique para registrar'}
                       >
                         {day}
-                        {hasAula && <span className="cal-dot" />}
+                        {hasAula && <span className="cal-dot" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', width: aulasCount > 1 ? '14px' : '5px', height: aulasCount > 1 ? '14px' : '5px', bottom: aulasCount > 1 ? '-2px' : '3px', right: aulasCount > 1 ? '-2px' : 'auto', color: 'white', fontWeight: 'bold' }}>{aulasCount > 1 ? aulasCount : ''}</span>}
                       </button>
                     );
                   })}

@@ -138,6 +138,12 @@ const Dashboard = () => {
 
         {/* Right Column: Events & Mini-Calendar */}
         <Card className="grid-card events-widget stagger-5" title={<><Cake size={18} style={{ color: 'var(--primary-pink)' }} /> Aniversariantes do Mês</>} action={<span style={{fontSize: '0.8rem', color: 'var(--primary-purple)', cursor: 'pointer', fontWeight: 700}} onClick={()=>navigate('/professores/cadastro')}>Ver Todos &gt;</span>}>
+          <style>{`
+            @keyframes fireworksGradient {
+              0% { background-position: 0% 50%; }
+              100% { background-position: 200% 50%; }
+            }
+          `}</style>
           {(() => {
             const currentMonth = today.getMonth(); // 0-11
             const aniversariantes = professores.filter(p => {
@@ -161,39 +167,73 @@ const Dashboard = () => {
             }
 
             return (
-              <ul className="task-list widget-list" style={{ padding: 0, margin: 0 }}>
+              <div className="birthdays-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', padding: '0.5rem 1rem 1rem' }}>
                 {aniversariantes.map(prof => {
                   const dia = prof.dataAniversario.split('-')[2];
                   const isToday = prof.dataAniversario.slice(5) === `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                  
                   return (
-                    <li key={prof.id} style={{
-                      padding: '0.7rem 1rem',
+                    <div key={prof.id} className={`birthday-item ${isToday ? 'is-today' : ''}`} style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.75rem',
-                      background: isToday ? 'linear-gradient(135deg, #fcedf4, #f7e6f8)' : 'transparent',
-                      borderRadius: isToday ? '10px' : '0',
-                      borderLeft: isToday ? '3px solid var(--primary-pink)' : 'none'
+                      gap: '1rem',
+                      padding: '0.75rem',
+                      borderRadius: '12px',
+                      background: isToday ? 'linear-gradient(135deg, #fff0f6 0%, #fdf4fc 100%)' : '#faf8ff',
+                      border: isToday ? '1.5px solid #ffdeeb' : '1px solid #f0ecf5',
+                      boxShadow: isToday ? '0 4px 12px rgba(236, 72, 153, 0.08)' : 'none',
+                      transition: 'all 0.2s var(--smooth-easing)'
                     }}>
-                      <div style={{
-                        width: 36, height: 36, borderRadius: '50%',
-                        background: isToday ? 'linear-gradient(135deg, var(--primary-pink), var(--primary-purple))' : 'var(--bg-light)',
-                        color: isToday ? 'white' : 'var(--text-muted)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontWeight: 700, fontSize: '0.85rem', flexShrink: 0
+                      <div className="birthday-date" style={{
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '10px',
+                        background: isToday ? 'linear-gradient(135deg, var(--primary-pink) 0%, #f472b6 100%)' : '#fff',
+                        color: isToday ? '#fff' : 'var(--primary-purple)',
+                        border: isToday ? 'none' : '1px solid #e5dcf7',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        boxShadow: isToday ? '0 2px 8px rgba(244, 114, 182, 0.35)' : '0 1px 3px rgba(0,0,0,0.02)'
                       }}>
-                        {dia}
+                        <span style={{ fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', lineHeight: 1, marginBottom: '2px', opacity: isToday ? 0.9 : 0.6 }}>Dia</span>
+                        <span style={{ fontSize: '1.05rem', fontWeight: 800, lineHeight: 1 }}>{dia}</span>
                       </div>
-                      <div style={{ flex: 1 }}>
-                        <span style={{ fontWeight: 600, color: 'var(--text-dark)', fontSize: '0.9rem' }}>
-                          {prof.nome} {isToday && '🎂'}
-                        </span>
+                      
+                      <div className="birthday-info" style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 700, color: 'var(--text-dark)', fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {prof.nome}
+                        </div>
+                        {isToday && (
+                          <div style={{ fontSize: '0.75rem', color: 'var(--primary-pink)', marginTop: '0.15rem', fontWeight: 700 }}>
+                            🎂 É o dia especial!
+                          </div>
+                        )}
                       </div>
-                      {isToday && <span style={{ fontSize: '0.75rem', color: 'var(--primary-pink)', fontWeight: 700 }}>HOJE!</span>}
-                    </li>
+
+                      {isToday && (
+                        <div className="birthday-badge" style={{
+                          background: 'linear-gradient(90deg, #ff0f7b 0%, #f89b29 25%, #ff0f7b 50%, #f89b29 75%, #ff0f7b 100%)',
+                          backgroundSize: '200% auto',
+                          animation: 'fireworksGradient 3s linear infinite',
+                          color: '#fff',
+                          textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+                          padding: '0.25rem 0.7rem',
+                          borderRadius: '20px',
+                          fontSize: '0.75rem',
+                          fontWeight: 900,
+                          letterSpacing: '0.5px',
+                          boxShadow: '0 3px 10px rgba(255, 15, 123, 0.4)'
+                        }}>
+                          HOJE!
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
-              </ul>
+              </div>
             );
           })()}
         </Card>

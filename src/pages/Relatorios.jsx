@@ -1,11 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
-import { BarChart3, TrendingUp, Users, CheckCircle, FileText, Printer, School, Library, Award } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, CheckCircle, FileText, Printer, School, Library, Award, Filter, Calendar } from 'lucide-react';
 import './Relatorios.css';
 
 const Relatorios = () => {
   const { escolas, turmas, professores, entregas, perfil } = useAppStore();
+
+  const [filtroProfId, setFiltroProfId] = useState('');
+  const [filtroEscolaId, setFiltroEscolaId] = useState('');
+  const [filtroTurmaId, setFiltroTurmaId] = useState('');
 
   // 1. Resumo Pedagógico Geral
   const totalEscolas = escolas.length;
@@ -105,22 +109,60 @@ const Relatorios = () => {
       window.print();
   };
 
-  return (
-    <div className="report-container animate-fade-in stagger-1">
-      {/* Cabeçalho de Impressão Oficial */}
-      <div className="print-only-header">
-         <div className="print-logo-circle"><Award size={34} /></div>
-         <h2>Relatório Estatístico e Pedagógico</h2>
-         <h3 style={{wordSpacing: '2px'}}>{perfil.tituloDaPlataforma.toUpperCase()}</h3>
-         <hr/>
-         <div className="print-meta-grid">
-            <p><strong>Emissor:</strong> {perfil.cargo} {perfil.nome}</p>
-            <p><strong>Data de Emissão:</strong> {new Date().toLocaleDateString()}</p>
-            <p><strong>Unidades na Rede:</strong> {totalEscolas}</p>
-            <p><strong>Total de Turmas:</strong> {totalTurmas}</p>
-         </div>
-      </div>
+  // 2. Relatório de Aulas Lecionadas
+  const getRelatorioAulas = () => {
+    let result = [];
+    professores.forEach(prof => {
+      if (filtroProfId && prof.id !== filtroProfId) return;
+      if (filtroEscolaId && prof.escolaId !== filtroEscolaId) return;
 
+      const profRegistroAulas = prof.registroAulas || {};
+      
+      (prof.vinculos || []).forEach(v => {
+        if (filtroTurmaId && v.turmaId !== filtroTurmaId) return;
+        
+        const turmaRef = mapTurmas[v.turmaId];
+        if (!turmaRef) return;
+        
+        // Se filtramos escola mas a turma nao é da escola, pula (caso prof.escolaId seja global mas a turma tem outro ID, garantir filtro cruzado)
+        if (filtroEscolaId && turmaRef.escolaId !== filtroEscolaId) return;
+
+        const escolaRef = escolas.find(e => e.id === turmaRef.escolaId);
+        
+        v.disciplinas.forEach(dNome => {
+           const discDetails = turmaRef.disciplinas.find(d => d.nome === dNome);
+           const cargaPrevista = discDetails ? parseInt(discDetails.cargaHoraria) || 0 : 0;
+           
+           const aulasKey = `${v.turmaId}|${dNome}`;
+           const registros = profRegistroAulas[aulasKey] || [];
+           
+           const datas = registros.map(r => {
+             // ensure correct timezone formatting if saved as iso string
+             return new Date(r.data + 'T12:00:00').toLocaleDateString('pt-BR');
+           }).sort();
+           
+           result.push({
+             profId: prof.id,
+             profNome: prof.nome,
+             escolaNome: escolaRef ? escolaRef.nome : 'Sem Escola Associada',
+             turmaNome: turmaRef.nome,
+             disciplina: dNome,
+             cargaPrevista: cargaPrevista,
+             aulasDadas: registros.length,
+             restam: Math.max(cargaPrevista - registros.length, 0),
+             datas: datas
+           });
+        });
+      });
+    });
+    return result;
+  };
+
+  const dadosRelatorioAulas = getRelatorioAulas();
+
+  return (
+    <>
+    <div className="report-container web-view animate-fade-in stagger-1">
       <div className="report-header">
          <div className="seq-header-title" style={{marginBottom: 0}}>
             <div className="summary-icon" style={{width: 50, height: 50, backgroundColor: '#fdf2f2', color: '#e54d60'}}>
@@ -253,7 +295,227 @@ const Relatorios = () => {
         </Card>
 
       </div>
+
+      {/* Visão Detalhada de Aulas (Filtros e Relatório) */}
+      <div className="detailed-report-section no-print-if-empty stagger-7" style={{ marginTop: '3rem' }}>
+        <div className="detailed-report-header">
+           <div className="seq-header-title">
+              <div className="summary-icon" style={{width: 44, height: 44, backgroundColor: '#f0f5ff', color: '#3b82f6'}}>
+                 <Filter size={18} />
+              </div>
+              <div>
+                 <h2 className="text-title">Aulas Lecionadas - Detalhado</h2>
+                 <span style={{color: 'var(--text-light)', fontSize: '0.85rem'}}>Filtre por professor, escola ou turma para ver as aulas ministradas</span>
+              </div>
+           </div>
+           <button className="btn btn-outline print-btn no-print" onClick={() => {
+              document.body.classList.add('print-detailed-only');
+              window.print();
+              setTimeout(() => document.body.classList.remove('print-detailed-only'), 500);
+           }} style={{borderColor: '#3b82f6', color: '#3b82f6'}}>
+              <Printer size={18}/> Imprimir Filtro
+           </button>
+        </div>
+
+        <Card className="no-print filter-card" style={{ marginBottom: '1.5rem', padding: '1rem 1.5rem' }}>
+           <div className="filter-bar">
+             <div className="filter-group">
+                <label>Professor</label>
+                <select className="form-input" value={filtroProfId} onChange={e => setFiltroProfId(e.target.value)}>
+                   <option value="">Todos os Professores</option>
+                   {professores.map(p => <option key={p.id} value={p.id}>{p.nome}</option>)}
+                </select>
+             </div>
+             <div className="filter-group">
+                <label>Escola</label>
+                <select className="form-input" value={filtroEscolaId} onChange={e => {
+                  setFiltroEscolaId(e.target.value);
+                  setFiltroTurmaId(''); // Reset turma when changing escola
+                }}>
+                   <option value="">Todas as Escolas</option>
+                   {escolas.map(e => <option key={e.id} value={e.id}>{e.nome}</option>)}
+                </select>
+             </div>
+             <div className="filter-group">
+                <label>Turma</label>
+                <select className="form-input" value={filtroTurmaId} onChange={e => setFiltroTurmaId(e.target.value)}>
+                   <option value="">Todas as Turmas</option>
+                   {turmas.filter(t => !filtroEscolaId || t.escolaId === filtroEscolaId).map(t => (
+                     <option key={t.id} value={t.id}>{t.nome}</option>
+                   ))}
+                </select>
+             </div>
+           </div>
+        </Card>
+
+        <div className="detailed-results-container">
+           {dadosRelatorioAulas.length > 0 ? (
+             <div className="detailed-table-wrapper">
+               <table className="detailed-table">
+                 <thead>
+                   <tr>
+                     <th>Professor</th>
+                     <th>Escola / Turma</th>
+                     <th>Disciplina</th>
+                     <th className="center-cell">CH</th>
+                     <th className="center-cell">Dadas</th>
+                     <th className="center-cell">Faltam</th>
+                     <th>Datas das Aulas</th>
+                   </tr>
+                 </thead>
+                 <tbody>
+                   {dadosRelatorioAulas.map((row, i) => (
+                     <tr key={i}>
+                       <td><strong>{row.profNome}</strong></td>
+                       <td>
+                          <div className="row-escola">{row.escolaNome}</div>
+                          <div className="row-turma" style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{row.turmaNome}</div>
+                       </td>
+                       <td>{row.disciplina}</td>
+                       <td className="center-cell"><span style={{ fontWeight: 800, color: 'var(--text-main)' }}>{row.cargaPrevista}h</span></td>
+                       <td className="center-cell"><span style={{ fontWeight: 800, color: '#10b981' }}>{row.aulasDadas}</span></td>
+                       <td className="center-cell">
+                         <span style={{ fontWeight: 800, color: row.restam === 0 ? 'var(--text-muted)' : '#ef4444' }}>
+                           {row.restam}
+                         </span>
+                       </td>
+                       <td className="dates-cell" style={{ fontSize: '0.85rem', lineHeight: '1.4' }}>
+                          {row.datas.length > 0 ? row.datas.join(', ') : <span style={{ color: 'var(--text-light)' }}>Nenhuma</span>}
+                       </td>
+                     </tr>
+                   ))}
+                 </tbody>
+               </table>
+             </div>
+           ) : (
+             <div className="empty-filter-state no-print" style={{ textAlign: 'center', padding: '3rem', backgroundColor: 'var(--bg-color)', borderRadius: 'var(--radius-lg)' }}>
+               <Calendar size={40} style={{opacity: 0.2, margin: '0 auto 1rem', display: 'block'}} />
+               <p style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Nenhuma aula encontrada para os filtros selecionados.</p>
+             </div>
+           )}
+        </div>
+      </div>
     </div>
+
+    {/* =========================================
+        DUAL RENDER: THE PRINT DOCUMENT
+    ========================================= */}
+    <div className="print-document only-print" style={{ display: 'none' }}>
+      <div className="print-doc-header">
+        <h1>RELATÓRIO DE DESEMPENHO PEDAGÓGICO</h1>
+        <h2>{perfil.tituloDaPlataforma.toUpperCase()}</h2>
+        <table className="print-meta-table">
+          <tbody>
+            <tr>
+              <td><strong>Emissor:</strong> {perfil.cargo} {perfil.nome}</td>
+              <td><strong>Data:</strong> {new Date().toLocaleDateString()}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="print-section">
+        <h3>1. RESUMO EXECUTIVO</h3>
+        <table className="print-data-table">
+          <thead>
+            <tr>
+              <th>Unidades de Ensino</th>
+              <th>Total de Turmas</th>
+              <th>Corpo Docente</th>
+              <th>Aulas Lançadas (Global)</th>
+              <th>Garantia de SDs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{textAlign: 'center'}}>{totalEscolas}</td>
+              <td style={{textAlign: 'center'}}>{totalTurmas}</td>
+              <td style={{textAlign: 'center'}}>{totalProfessores}</td>
+              <td style={{textAlign: 'center'}}>{totalAulasDadas}</td>
+              <td style={{textAlign: 'center'}}>{percentGarantido}% Entregues</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="print-section">
+        <h3>2. DESEMPENHO POR PROFESSOR (Visão Geral)</h3>
+        <table className="print-data-table">
+          <thead>
+            <tr>
+              <th>Professor</th>
+              <th>Assiduidade SD</th>
+              <th>Taxa SD</th>
+              <th>Carga Horária Dadas/Prevista</th>
+              <th>Progresso Curricular</th>
+            </tr>
+          </thead>
+          <tbody>
+            {desempenhoProfs.sort((a,b) => b.execPct - a.execPct).map(prof => (
+              <tr key={prof.id}>
+                <td>{prof.nome}</td>
+                <td style={{textAlign: 'center'}}>{prof.entreguesSD} / {prof.totalVincSD}</td>
+                <td style={{textAlign: 'center'}}>{prof.taxaSD}%</td>
+                <td style={{textAlign: 'center'}}>{prof.aulasDadas} / {prof.cargaPlanejada}h</td>
+                <td style={{textAlign: 'center'}}>{prof.execPct}%</td>
+              </tr>
+            ))}
+            {desempenhoProfs.length === 0 && <tr><td colSpan="5">Nenhum professor cadastrado.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="print-section">
+        <h3>3. DETALHAMENTO DE AULAS</h3>
+        {filtroProfId || filtroEscolaId || filtroTurmaId ? (
+          <p className="print-filter-text">
+            <strong>Filtros aplicados:</strong> 
+            {filtroProfId && ` Professor: ${professores.find(p=>p.id===filtroProfId)?.nome} |`}
+            {filtroEscolaId && ` Escola: ${escolas.find(e=>e.id===filtroEscolaId)?.nome} |`}
+            {filtroTurmaId && ` Turma: ${turmas.find(t=>t.id===filtroTurmaId)?.nome}`}
+          </p>
+        ) : (
+          <p className="print-filter-text">Visão Geral (Todos os registros)</p>
+        )}
+        <table className="print-data-table">
+          <thead>
+            <tr>
+              <th>Professor</th>
+              <th>Escola / Turma</th>
+              <th>Disciplina</th>
+              <th>CH</th>
+              <th>Dadas</th>
+              <th>Restam</th>
+              <th>Datas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dadosRelatorioAulas.map((row, i) => (
+              <tr key={`print-row-${i}`}>
+                <td><strong>{row.profNome}</strong></td>
+                <td>
+                  <div>{row.escolaNome}</div>
+                  <div style={{fontSize: '0.8rem', color: '#555'}}>{row.turmaNome}</div>
+                </td>
+                <td>{row.disciplina}</td>
+                <td style={{textAlign: 'center'}}>{row.cargaPrevista}h</td>
+                <td style={{textAlign: 'center'}}>{row.aulasDadas}</td>
+                <td style={{textAlign: 'center'}}>{row.restam}</td>
+                <td style={{fontSize: '0.8rem'}}>{row.datas.join(', ') || '-'}</td>
+              </tr>
+            ))}
+            {dadosRelatorioAulas.length === 0 && (
+              <tr><td colSpan="7" style={{textAlign: 'center'}}>Nenhum dado encontrado com os filtros atuais.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="print-footer">
+        <p>Documento gerado pelo sistema Espacinho de Controle Pedagógico</p>
+      </div>
+    </div>
+    </>
   );
 };
 

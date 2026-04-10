@@ -16,6 +16,11 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
+.skills_utilizados.md
+.parecer_tecnico_auditoria.md
+.p.md
+.env
+.env.local
 
 # AI Agent configs
 .agents

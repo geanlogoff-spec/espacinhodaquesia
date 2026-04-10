@@ -102,6 +102,7 @@ export const useAppStore = create((set, get) => ({
   // AUTH ACTIONS
   // ============================================================
   handleLogin: async (email, password) => {
+    if (!supabase) throw new Error('Supabase não configurado. Verifique as variáveis de ambiente.');
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       throw error;
@@ -112,7 +113,7 @@ export const useAppStore = create((set, get) => ({
   },
 
   handleLogout: async () => {
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
     set({
       isLoggedIn: false,
       user: null,
@@ -131,6 +132,10 @@ export const useAppStore = create((set, get) => ({
 
   // Initialize auth state from existing session
   initAuth: async () => {
+    if (!supabase) {
+      set({ loading: false });
+      return;
+    }
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) {
       set({ isLoggedIn: true, user: session.user });
@@ -152,6 +157,7 @@ export const useAppStore = create((set, get) => ({
   // FETCH ALL DATA
   // ============================================================
   fetchAll: async () => {
+    if (!supabase) return;
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
@@ -889,6 +895,10 @@ export const useAppStore = create((set, get) => ({
   // PUBLIC DATA (for PortalPublico - no auth required)
   // ============================================================
   fetchPublicData: async () => {
+    if (!supabase) {
+      set({ loading: false });
+      return;
+    }
     const [arquivosRes, eventosRes] = await Promise.all([
       supabase.from('arquivos').select('*').eq('is_public', true).order('created_at', { ascending: false }),
       supabase.from('eventos').select('*').order('data')

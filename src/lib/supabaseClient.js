@@ -4,7 +4,12 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('As variáveis de ambiente do Supabase não estão configuradas (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)');
+  console.error(
+    '⚠️ Variáveis de ambiente do Supabase não configuradas.',
+    'Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.local ou no painel da Vercel.'
+  );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;

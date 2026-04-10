@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { Eye, EyeOff, School, AlertCircle } from 'lucide-react';
@@ -12,9 +12,19 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const lastAttempt = useRef(0);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
+
+    const now = Date.now();
+    if (now - lastAttempt.current < 2000) {
+      setErrorMsg('Aguarde um momento antes de tentar novamente.');
+      return;
+    }
+    lastAttempt.current = now;
+
     setIsLoading(true);
     setErrorMsg('');
     
@@ -95,6 +105,7 @@ const Login = () => {
                   placeholder="Endereço de Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   required
                 />
               </div>
@@ -105,6 +116,7 @@ const Login = () => {
                   placeholder="Senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
                 <button 

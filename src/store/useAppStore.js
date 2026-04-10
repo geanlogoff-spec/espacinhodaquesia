@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabaseClient';
+import { validateEscola, validateProfessor, validateArquivo, validateEntrega, sanitize } from '../lib/validation';
+
 
 // Helper: Transform relational DB data into the flat format the UI expects for professors
 // DB: professores + professor_vinculos + turma_disciplinas + registro_aulas
@@ -309,7 +311,7 @@ export const useAppStore = create((set, get) => ({
         error: null
       });
     } catch (err) {
-      console.error('fetchAll error:', err);
+      if (import.meta.env.DEV) console.error('fetchAll error:', err);
       set({ error: err.message });
     }
   },
@@ -342,13 +344,19 @@ export const useAppStore = create((set, get) => ({
     const user = get().user;
     if (!user) return;
 
+    const errors = validateEscola(newEscola);
+    if (errors.length > 0) {
+      if (import.meta.env.DEV) console.error('Validation failed:', errors);
+      return;
+    }
+
     const { data, error } = await supabase.from('escolas').insert({
       user_id: user.id,
-      nome: newEscola.nome,
-      endereco: newEscola.endereco || null,
-      telefone: newEscola.telefone || null,
-      email: newEscola.email || null,
-      diretor: newEscola.diretor || null
+      nome: sanitize(newEscola.nome),
+      endereco: sanitize(newEscola.endereco) || null,
+      telefone: sanitize(newEscola.telefone) || null,
+      email: sanitize(newEscola.email) || null,
+      diretor: sanitize(newEscola.diretor) || null
     }).select().single();
 
     if (!error && data) {
@@ -366,12 +374,18 @@ export const useAppStore = create((set, get) => ({
   },
 
   handleEditEscola: async (id, updatedData) => {
+    const errors = validateEscola(updatedData);
+    if (errors.length > 0) {
+      if (import.meta.env.DEV) console.error('Validation failed:', errors);
+      return;
+    }
+
     const { error } = await supabase.from('escolas').update({
-      nome: updatedData.nome,
-      endereco: updatedData.endereco || null,
-      telefone: updatedData.telefone || null,
-      email: updatedData.email || null,
-      diretor: updatedData.diretor || null
+      nome: sanitize(updatedData.nome),
+      endereco: sanitize(updatedData.endereco) || null,
+      telefone: sanitize(updatedData.telefone) || null,
+      email: sanitize(updatedData.email) || null,
+      diretor: sanitize(updatedData.diretor) || null
     }).eq('id', id);
 
     if (!error) {
@@ -482,12 +496,18 @@ export const useAppStore = create((set, get) => ({
     const user = get().user;
     if (!user) return;
 
+    const errors = validateProfessor(newProf);
+    if (errors.length > 0) {
+      if (import.meta.env.DEV) console.error('Validation failed:', errors);
+      return;
+    }
+
     // 1. Insert professor
     const { data: profData, error: profError } = await supabase.from('professores').insert({
       user_id: user.id,
       escola_id: newProf.escolaId || null,
-      nome: newProf.nome,
-      telefone: newProf.telefone || null,
+      nome: sanitize(newProf.nome),
+      telefone: sanitize(newProf.telefone) || null,
       data_aniversario: newProf.dataAniversario || null
     }).select().single();
 
@@ -511,9 +531,9 @@ export const useAppStore = create((set, get) => ({
     });
 
     if (vinculosToInsert.length > 0) {
-      console.log("handleAddProf - Iniciando inclusão em professor_vinculos:", vinculosToInsert);
+
       const { data: vinculoData, error: vinculoError } = await supabase.from('professor_vinculos').insert(vinculosToInsert).select('*, turma_disciplinas(*)');
-      if (vinculoError) {
+      if (vinculoError && import.meta.env.DEV) {
         console.error("handleAddProf - Erro ao inserir professor_vinculos:", vinculoError);
       }
       
@@ -571,10 +591,10 @@ export const useAppStore = create((set, get) => ({
         });
       });
 
-      console.log("handleEditProf - vinculosToInsert:", vinculosToInsert);
+
       if (vinculosToInsert.length > 0) {
         const { error: vinculoError } = await supabase.from('professor_vinculos').insert(vinculosToInsert);
-        if (vinculoError) {
+        if (vinculoError && import.meta.env.DEV) {
             console.error("handleEditProf - Erro ao inserir professor_vinculos:", vinculoError);
         }
       }
@@ -648,10 +668,16 @@ export const useAppStore = create((set, get) => ({
     const user = get().user;
     if (!user) return;
 
+    const errors = validateEntrega(newEntrega);
+    if (errors.length > 0) {
+      if (import.meta.env.DEV) console.error('Validation failed:', errors);
+      return;
+    }
+
     // 1. Insert entrega
     const { data: entregaData, error: entregaError } = await supabase.from('entregas').insert({
       user_id: user.id,
-      titulo: newEntrega.titulo,
+      titulo: sanitize(newEntrega.titulo),
       tipo: newEntrega.tipo,
       execucao_inicio: newEntrega.execucaoInicio || null,
       execucao_fim: newEntrega.execucaoFim || null,
@@ -766,19 +792,19 @@ export const useAppStore = create((set, get) => ({
     if (!supabase) return;
     const user = get().user;
     if (!user) {
-      console.error('handleAddEvento: Usuário não está logado');
+      if (import.meta.env.DEV) console.error('handleAddEvento: Usuário não está logado');
       return;
     }
 
     const { data, error } = await supabase.from('eventos').insert({
       user_id: user.id,
-      titulo: newEvento.titulo,
+      titulo: sanitize(newEvento.titulo),
       data: newEvento.data,
       tipo: newEvento.tipo
     }).select().single();
 
     if (error) {
-      console.error('Erro ao salvar evento:', error);
+      if (import.meta.env.DEV) console.error('Erro ao salvar evento:', error);
       return;
     }
 
@@ -793,7 +819,7 @@ export const useAppStore = create((set, get) => ({
     if (!supabase) return;
     const { error } = await supabase.from('eventos').delete().eq('id', id);
     if (error) {
-      console.error('Erro ao remover evento:', error);
+      if (import.meta.env.DEV) console.error('Erro ao remover evento:', error);
       return;
     }
     set(state => ({ eventos: state.eventos.filter(e => e.id !== id) }));
@@ -808,7 +834,7 @@ export const useAppStore = create((set, get) => ({
 
     const { data, error } = await supabase.from('tarefas').insert({
       user_id: user.id,
-      text: newTarefa.text,
+      text: sanitize(newTarefa.text),
       completed: newTarefa.completed || false,
       priority: newTarefa.priority || 'media',
       data: newTarefa.data || null
@@ -867,7 +893,7 @@ export const useAppStore = create((set, get) => ({
 
     const { data, error } = await supabase.from('notas').insert({
       user_id: user.id,
-      text
+      text: sanitize(text)
     }).select().single();
 
     if (!error && data) {
@@ -891,12 +917,18 @@ export const useAppStore = create((set, get) => ({
     const user = get().user;
     if (!user) return;
 
+    const errors = validateArquivo(newArquivo);
+    if (errors.length > 0) {
+      if (import.meta.env.DEV) console.error('Validation failed:', errors);
+      return;
+    }
+
     const { data, error } = await supabase.from('arquivos').insert({
       user_id: user.id,
-      nome: newArquivo.nome,
+      nome: sanitize(newArquivo.nome),
       data: newArquivo.data || null,
-      tamanho: newArquivo.tamanho || null,
-      link: newArquivo.link || null,
+      tamanho: sanitize(newArquivo.tamanho) || null,
+      link: sanitize(newArquivo.link) || null,
       is_public: true
     }).select().single();
 

@@ -3,7 +3,7 @@ import Card from '../components/Card';
 import Badge from '../components/Badge';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
-import { CheckSquare, ClipboardList, CalendarDays, ChevronRight, Check, Play, Edit3, XCircle } from 'lucide-react';
+import { CheckSquare, ClipboardList, CalendarDays, ChevronRight, Check, Play, Edit3, XCircle, Cake } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -31,22 +31,7 @@ const Dashboard = () => {
 
   const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
   
-  // Grade Mini-Calendário
-  const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-  const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
 
-  const daysInMonth = getDaysInMonth(today.getFullYear(), today.getMonth());
-  const firstDayIndex = getFirstDayOfMonth(today.getFullYear(), today.getMonth());
-  const prevLastDay = getDaysInMonth(today.getFullYear(), today.getMonth() - 1);
-
-  const miniCalCells = [];
-  for (let x = firstDayIndex; x > 0; x--) { miniCalCells.push({ day: prevLastDay - x + 1, current: false }); }
-  for (let i = 1; i <= daysInMonth; i++) {
-     let hasEvent = eventos.some(ev => ev.data === `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`);
-     miniCalCells.push({ day: i, current: true, hasEvent }); 
-  }
-  const remainingCells = 42 - miniCalCells.length;
-  for (let j = 1; j <= remainingCells; j++) { miniCalCells.push({ day: j, current: false }); }
 
   return (
     <div className="dashboard-container">
@@ -152,25 +137,65 @@ const Dashboard = () => {
         </Card>
 
         {/* Right Column: Events & Mini-Calendar */}
-        <Card className="grid-card events-widget stagger-5" title="Resumo do Mês" action={<span style={{fontSize: '0.8rem', color: 'var(--primary-purple)', cursor: 'pointer', fontWeight: 700}} onClick={()=>navigate('/calendario')}>Detalhes &gt;</span>}>
-          <div className="mini-calendar" onClick={() => navigate('/calendario')} style={{cursor: 'pointer'}}>
-            <div className="calendar-header">
-              <h3>{monthNames[today.getMonth()]} {today.getFullYear()}</h3>
-            </div>
-            <div className="calendar-grid">
-              <div className="cal-day">D</div><div className="cal-day">S</div><div className="cal-day">T</div>
-              <div className="cal-day">Q</div><div className="cal-day">Q</div><div className="cal-day">S</div><div className="cal-day">S</div>
-              
-              {miniCalCells.map((cell, idx) => {
-                 const isToday = cell.current && cell.day === today.getDate();
-                 return (
-                   <div key={idx} className={`cal-date ${!cell.current ? 'disabled-date' : ''} ${isToday ? 'today' : ''} ${cell.hasEvent && !isToday ? 'has-event-dot' : ''}`}>
-                     {cell.day}
-                   </div>
-                 )
-              })}
-            </div>
-          </div>
+        <Card className="grid-card events-widget stagger-5" title={<><Cake size={18} style={{ color: 'var(--primary-pink)' }} /> Aniversariantes do Mês</>} action={<span style={{fontSize: '0.8rem', color: 'var(--primary-purple)', cursor: 'pointer', fontWeight: 700}} onClick={()=>navigate('/professores/cadastro')}>Ver Todos &gt;</span>}>
+          {(() => {
+            const currentMonth = today.getMonth(); // 0-11
+            const aniversariantes = professores.filter(p => {
+              if (!p.dataAniversario) return false;
+              const parts = p.dataAniversario.split('-');
+              const mesAniv = parseInt(parts[1], 10) - 1; // month 0-indexed
+              return mesAniv === currentMonth;
+            }).sort((a, b) => {
+              const diaA = parseInt(a.dataAniversario.split('-')[2], 10);
+              const diaB = parseInt(b.dataAniversario.split('-')[2], 10);
+              return diaA - diaB;
+            });
+
+            if (aniversariantes.length === 0) {
+              return (
+                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-light)' }}>
+                  <Cake size={32} style={{ color: 'var(--border-color)', marginBottom: '0.5rem' }} />
+                  <p style={{ margin: 0, fontSize: '0.9rem' }}>Nenhum aniversariante em {monthNames[currentMonth]}.</p>
+                </div>
+              );
+            }
+
+            return (
+              <ul className="task-list widget-list" style={{ padding: 0, margin: 0 }}>
+                {aniversariantes.map(prof => {
+                  const dia = prof.dataAniversario.split('-')[2];
+                  const isToday = prof.dataAniversario.slice(5) === `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                  return (
+                    <li key={prof.id} style={{
+                      padding: '0.7rem 1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      background: isToday ? 'linear-gradient(135deg, #fcedf4, #f7e6f8)' : 'transparent',
+                      borderRadius: isToday ? '10px' : '0',
+                      borderLeft: isToday ? '3px solid var(--primary-pink)' : 'none'
+                    }}>
+                      <div style={{
+                        width: 36, height: 36, borderRadius: '50%',
+                        background: isToday ? 'linear-gradient(135deg, var(--primary-pink), var(--primary-purple))' : 'var(--bg-light)',
+                        color: isToday ? 'white' : 'var(--text-muted)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontWeight: 700, fontSize: '0.85rem', flexShrink: 0
+                      }}>
+                        {dia}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <span style={{ fontWeight: 600, color: 'var(--text-dark)', fontSize: '0.9rem' }}>
+                          {prof.nome} {isToday && '🎂'}
+                        </span>
+                      </div>
+                      {isToday && <span style={{ fontSize: '0.75rem', color: 'var(--primary-pink)', fontWeight: 700 }}>HOJE!</span>}
+                    </li>
+                  );
+                })}
+              </ul>
+            );
+          })()}
         </Card>
       </div>
 

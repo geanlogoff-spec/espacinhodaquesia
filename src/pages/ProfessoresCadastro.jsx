@@ -2,7 +2,7 @@ import React, { useState, useContext, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
-import { Users, Plus, X, CheckCircle2, Pencil, School, GraduationCap, BookOpen, Phone, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { Users, Plus, X, CheckCircle2, Pencil, School, GraduationCap, BookOpen, Phone, ChevronDown, ChevronUp, Trash2, Cake } from 'lucide-react';
 import './Professores.css';
 
 const ProfessoresCadastro = () => {
@@ -15,17 +15,17 @@ const ProfessoresCadastro = () => {
   const [editingProf, setEditingProf] = useState(null);
   // vinculos: [{ turmaId: string, disciplinas: string[] }]
   const [formData, setFormData] = useState({
-    nome: '', telefone: '', escolaId: '', vinculos: []
+    nome: '', telefone: '', dataAniversario: '', escolaId: '', vinculos: []
   });
 
   const resetForm = () => {
-    setFormData({ nome: '', telefone: '', escolaId: '', vinculos: [] });
+    setFormData({ nome: '', telefone: '', dataAniversario: '', escolaId: '', vinculos: [] });
     setEditingProf(null);
     setShowForm(false);
   };
 
   const openAdd = () => {
-    setFormData({ nome: '', telefone: '', escolaId: '', vinculos: [] });
+    setFormData({ nome: '', telefone: '', dataAniversario: '', escolaId: '', vinculos: [] });
     setEditingProf(null);
     setShowForm(true);
   };
@@ -34,6 +34,7 @@ const ProfessoresCadastro = () => {
     setFormData({
       nome: prof.nome || '',
       telefone: prof.telefone || '',
+      dataAniversario: prof.dataAniversario || '',
       escolaId: prof.escolaId ? String(prof.escolaId) : '',
       vinculos: prof.vinculos || []
     });
@@ -154,6 +155,9 @@ const ProfessoresCadastro = () => {
                       {prof.telefone && (
                         <span className="prof-subject"><Phone size={12} /> {prof.telefone}</span>
                       )}
+                      {prof.dataAniversario && (
+                        <span className="prof-subject" style={{ color: 'var(--primary-pink)' }}><Cake size={12} /> {prof.dataAniversario.split('-').reverse().join('/')}</span>
+                      )}
                     </div>
                   </div>
 
@@ -244,9 +248,15 @@ const ProfessoresCadastro = () => {
                     <input type="text" className="custom-input" placeholder="Ex: Ana Clara Silva" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} required />
                   </div>
                 </div>
-                <div className="form-group full-width">
-                  <label>Telefone / Contato</label>
-                  <input type="text" className="custom-input" placeholder="(00) 00000-0000" value={formData.telefone} onChange={e => setFormData({ ...formData, telefone: e.target.value })} />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Telefone / Contato</label>
+                    <input type="text" className="custom-input" placeholder="(00) 00000-0000" value={formData.telefone} onChange={e => setFormData({ ...formData, telefone: e.target.value })} />
+                  </div>
+                  <div className="form-group">
+                    <label><Cake size={14} style={{ verticalAlign: 'middle' }} /> Data de Aniversário</label>
+                    <input type="date" className="custom-input" value={formData.dataAniversario} onChange={e => setFormData({ ...formData, dataAniversario: e.target.value })} />
+                  </div>
                 </div>
 
                 {/* ESCOLA */}

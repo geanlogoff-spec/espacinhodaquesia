@@ -35,6 +35,7 @@ function buildProfessorFlat(prof, vinculos, registroAulas) {
     id: prof.id,
     nome: prof.nome,
     telefone: prof.telefone || '',
+    dataAniversario: prof.data_aniversario || '',
     escolaId: prof.escola_id || '',
     vinculos: vinculosFlat,
     registroAulas: registroMap,
@@ -486,7 +487,8 @@ export const useAppStore = create((set, get) => ({
       user_id: user.id,
       escola_id: newProf.escolaId || null,
       nome: newProf.nome,
-      telefone: newProf.telefone || null
+      telefone: newProf.telefone || null,
+      data_aniversario: newProf.dataAniversario || null
     }).select().single();
 
     if (profError || !profData) return;
@@ -539,6 +541,7 @@ export const useAppStore = create((set, get) => ({
     if (updatedData.nome !== undefined) updatePayload.nome = updatedData.nome;
     if (updatedData.telefone !== undefined) updatePayload.telefone = updatedData.telefone;
     if (updatedData.escolaId !== undefined) updatePayload.escola_id = updatedData.escolaId;
+    if (updatedData.dataAniversario !== undefined) updatePayload.data_aniversario = updatedData.dataAniversario || null;
 
     await supabase.from('professores').update(updatePayload).eq('id', id);
 
@@ -752,8 +755,12 @@ export const useAppStore = create((set, get) => ({
   // EVENTO ACTIONS
   // ============================================================
   handleAddEvento: async (newEvento) => {
+    if (!supabase) return;
     const user = get().user;
-    if (!user) return;
+    if (!user) {
+      console.error('handleAddEvento: Usuário não está logado');
+      return;
+    }
 
     const { data, error } = await supabase.from('eventos').insert({
       user_id: user.id,
@@ -762,7 +769,12 @@ export const useAppStore = create((set, get) => ({
       tipo: newEvento.tipo
     }).select().single();
 
-    if (!error && data) {
+    if (error) {
+      console.error('Erro ao salvar evento:', error);
+      return;
+    }
+
+    if (data) {
       set(state => ({
         eventos: [...state.eventos, { id: data.id, titulo: data.titulo, data: data.data, tipo: data.tipo }]
       }));
@@ -770,10 +782,13 @@ export const useAppStore = create((set, get) => ({
   },
 
   handleRemoverEvento: async (id) => {
+    if (!supabase) return;
     const { error } = await supabase.from('eventos').delete().eq('id', id);
-    if (!error) {
-      set(state => ({ eventos: state.eventos.filter(e => e.id !== id) }));
+    if (error) {
+      console.error('Erro ao remover evento:', error);
+      return;
     }
+    set(state => ({ eventos: state.eventos.filter(e => e.id !== id) }));
   },
 
   // ============================================================

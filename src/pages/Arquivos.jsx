@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Folder, Link as LinkIcon, Download, Search, Plus, Trash2, Copy, Share2, CheckCircle2 } from 'lucide-react';
 import './Arquivos.css';
 
 const Arquivos = () => {
-  const { arquivos, handleAddArquivo, handleRemoverArquivo } = useContext(AppContext);
+  const { arquivos, handleAddArquivo, handleRemoverArquivo } = useAppStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);

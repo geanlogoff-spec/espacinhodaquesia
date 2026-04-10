@@ -1,11 +1,21 @@
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../context/AppContext';
-import { Download, CalendarDays, ExternalLink, School, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useAppStore } from '../store/useAppStore';
+import { Download, CalendarDays, AlertCircle, School, Loader2 } from 'lucide-react';
 import './PortalPublico.css';
 
 const PortalPublico = () => {
-  const { arquivos, eventos, perfil } = useContext(AppContext);
-  const [activeTab, setActiveTab] = useState('arquivos'); // 'arquivos' or 'eventos'
+  const { arquivos, eventos, perfil, fetchPublicData } = useAppStore();
+  const [activeTab, setActiveTab] = useState('arquivos');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch public data from Supabase on mount (no auth required)
+  useEffect(() => {
+    const loadData = async () => {
+      await fetchPublicData();
+      setIsLoading(false);
+    };
+    loadData();
+  }, []);
 
   // Matemática para identificar eventos do futuro/hoje
   const today = new Date();
@@ -14,7 +24,7 @@ const PortalPublico = () => {
   const proximosEventos = eventos
     .filter(ev => ev.data >= todayStr)
     .sort((a, b) => new Date(a.data) - new Date(b.data))
-    .slice(0, 5); // Mostra só os 5 mais próximos para não poluir
+    .slice(0, 5);
 
   // Formatador de data simpático (Ex: 25/Abril)
   const formatFriendlyDate = (dateStr) => {
@@ -23,6 +33,15 @@ const PortalPublico = () => {
     const mNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     return `${day}/${mNames[parseInt(month)-1]}`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="portal-mobile-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <Loader2 size={32} className="animate-spin" style={{ color: 'var(--primary-purple, #7c3aed)', animation: 'spin 1s linear infinite' }} />
+        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="portal-mobile-wrapper">

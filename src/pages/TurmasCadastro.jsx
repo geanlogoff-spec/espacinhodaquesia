@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { GraduationCap, Plus, X, CheckCircle2, School, Pencil, Calendar, BookOpen, Trash2 } from 'lucide-react';
 import './Escola.css';
 
@@ -20,7 +20,7 @@ const DISCIPLINAS_DISPONIVEIS = [
 ];
 
 const TurmasCadastro = () => {
-  const { turmas = [], escolas = [], handleAddTurma, handleEditTurma, handleRemoverTurma } = useContext(AppContext);
+  const { turmas = [], escolas = [], handleAddTurma, handleEditTurma, handleRemoverTurma } = useAppStore();
 
   const [showForm, setShowForm] = useState(false);
   const [editingTurma, setEditingTurma] = useState(null);

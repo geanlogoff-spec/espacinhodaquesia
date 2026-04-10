@@ -16,6 +16,10 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# AI Agent configs
+.agents
+.gemini
 .DS_Store
 *.suo
 *.ntvs*

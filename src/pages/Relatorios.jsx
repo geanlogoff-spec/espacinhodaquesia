@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { BarChart3, TrendingUp, Users, CheckCircle, FileText, Printer, School, Library, Award } from 'lucide-react';
 import './Relatorios.css';
 
 const Relatorios = () => {
-  const { escolas, turmas, professores, entregas, perfil } = useContext(AppContext);
+  const { escolas, turmas, professores, entregas, perfil } = useAppStore();
 
   // 1. Resumo Pedagógico Geral
   const totalEscolas = escolas.length;

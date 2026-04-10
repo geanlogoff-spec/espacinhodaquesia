@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Clock, CheckCircle2, AlertCircle, ChevronDown, ChevronUp, BookOpen, GraduationCap, Plus, X, CalendarDays, MessageSquare, Trash2 } from 'lucide-react';
 import './Professores.css';
 
@@ -9,7 +9,7 @@ const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 const ProfessoresContagem = () => {
-  const { professores, turmas = [], handleRegistrarAula, handleRemoverAula } = useContext(AppContext);
+  const { professores, turmas = [], handleRegistrarAula, handleRemoverAula } = useAppStore();
 
   const [expandedProf, setExpandedProf] = useState(null);
   const [activeVinculo, setActiveVinculo] = useState(null); // { profId, chave, turmaId, disciplina }

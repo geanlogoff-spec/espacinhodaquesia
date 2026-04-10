@@ -1,13 +1,13 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Bell, Settings, LogOut, Moon, User, AlertCircle, Save, ExternalLink } from 'lucide-react';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { tarefas, eventos, perfil, handleAtualizarPerfil, handleLogout, isProfileModalOpen, setIsProfileModalOpen } = useContext(AppContext);
+  const { tarefas, eventos, perfil, handleAtualizarPerfil, handleLogout, isProfileModalOpen, setIsProfileModalOpen } = useAppStore();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 

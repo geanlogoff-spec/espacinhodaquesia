@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import Loading from './components/Loading';
-import { AppProvider } from './context/AppContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
 // Lazy loaded pages for performance enhancement
@@ -28,7 +28,7 @@ const SequenciasAcompanhamento = lazy(() => import('./pages/SequenciasAcompanham
 
 function App() {
   return (
-    <AppProvider>
+    <ErrorBoundary>
       <BrowserRouter>
         <Suspense fallback={<Loading />}>
           <Routes>
@@ -65,7 +65,7 @@ function App() {
           </Routes>
         </Suspense>
       </BrowserRouter>
-    </AppProvider>
+    </ErrorBoundary>
   );
 }
 

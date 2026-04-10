@@ -1,11 +1,11 @@
 import React, { useState, useContext, useMemo } from 'react';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Search, ClipboardList, Check, X, ChevronDown, ChevronUp, Calendar, GraduationCap, BookOpen } from 'lucide-react';
 import './Sequencias.css';
 
 const SequenciasAcompanhamento = () => {
-  const { professores, turmas, entregas, toggleStatusVinculo } = useContext(AppContext);
+  const { professores, turmas, entregas, toggleStatusVinculo } = useAppStore();
 
   const [expandedId, setExpandedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');

@@ -169,156 +169,11 @@
   color: var(--text-light);
 }
 
-/* Modal do Professor */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
+/* Modal & Form styles — see index.css for shared definitions */
 
-.modal-content {
-  background-color: white;
-  border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 650px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-  overflow: hidden;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-}
+/* Sidebar Stats — see index.css for shared definitions */
 
-.modal-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h3 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin: 0;
-}
-
-.icon-btn-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-.icon-btn-close:hover {
-  background-color: var(--bg-color);
-  color: var(--danger-red);
-}
-
-.modal-body {
-  padding: 1.5rem;
-  overflow-y: auto;
-}
-
-.add-prof-form-modal {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-row {
-  display: flex;
-  gap: 1.25rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.form-group.full-width {
-  width: 100%;
-}
-
-.form-group label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.form-hint {
-  font-size: 0.8rem;
-  color: var(--text-light);
-  line-height: 1.4;
-}
-
-.form-divider {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--primary-purple);
-  margin-top: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px dashed rgba(195, 176, 245, 0.4);
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-/* Sidebar Stats */
-.mini-stat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.2rem 0;
-  border-bottom: 1px dashed rgba(195, 176, 245, 0.4);
-}
-.mini-stat.border-none { border-bottom: none; }
-
-.stat-label {
-  font-weight: 700;
-  color: var(--text-main);
-  font-size: 0.95rem;
-}
-
-.stat-number {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--text-main);
-}
-.stat-number.green { color: var(--success-green); }
-.stat-number.purple { color: var(--primary-purple); }
-
-/* Animations para o Modal */
-@keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-slide-up {
-  animation: slideUpFade 0.4s var(--spring-easing) forwards;
-}
+/* Animations — see index.css for shared definitions */
 
 /* Mobile Adjustments */
 @media (max-width: 1024px) {
@@ -334,19 +189,9 @@
     gap: 1rem;
   }
   
-  .form-row {
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-  
   .prof-actions {
     width: 100%;
     justify-content: space-between;
-  }
-  
-  .mobile-full-width {
-    width: 100%;
-    margin-top: 1rem;
   }
 }
 
@@ -359,11 +204,7 @@
   border-top: 1px dashed var(--card-border);
 }
 
-.professores-summary-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  max-width: 400px;
-}
+/* .professores-summary-row — see index.css */
 
 @media (max-width: 768px) {
   .prof-cadastro-meta {

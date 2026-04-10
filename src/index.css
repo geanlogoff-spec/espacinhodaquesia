@@ -280,3 +280,386 @@ body {
     font-size: 0.75rem;
   }
 }
+
+/* ==========================================
+   SHARED / REUSABLE COMPONENT STYLES
+   These styles are used across multiple lazy-loaded
+   pages and MUST live here in the global CSS to avoid
+   missing styles on page refresh.
+   ========================================== */
+
+/* ---- Page Header ---- */
+.seq-header-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* ---- Summary Icon (Dashboard + pages) ---- */
+.summary-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* ---- Modal System ---- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--card-border);
+}
+
+/* ---- Close Button (Modal) ---- */
+.icon-btn-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.icon-btn-close:hover {
+  background-color: var(--bg-color);
+  color: var(--danger-red);
+}
+
+/* ---- Delete Button ---- */
+.icon-btn-delete {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  padding: 0.4rem;
+}
+.icon-btn-delete:hover {
+  color: #e74c5e;
+  background: #fef2f2;
+}
+
+/* ---- Form System ---- */
+.add-prof-form-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.form-group.full-width {
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+.form-divider {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--primary-purple);
+  margin-top: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(195, 176, 245, 0.4);
+}
+
+/* ---- Inputs ---- */
+.custom-input {
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-family);
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.custom-input:focus {
+  border-color: var(--primary-pink);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(244, 166, 200, 0.2);
+}
+
+.custom-select {
+  background-color: white;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-family: var(--font-family);
+  font-weight: 700;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+/* ---- Badges ---- */
+.prof-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin-left: 0.5rem;
+}
+.prof-badge.secondary {
+  background-color: var(--sidebar-bg);
+  color: var(--text-muted);
+}
+.prof-badge.outline {
+  border: 1px solid var(--card-border);
+  color: var(--text-light);
+}
+
+/* ---- Empty State ---- */
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-light);
+  font-weight: 700;
+  background: #fcfafb;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--card-border);
+}
+
+/* ---- Summary Row / Mini Stats ---- */
+.professores-summary-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 400px;
+}
+
+.mini-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 0;
+  border-bottom: 1px dashed rgba(195, 176, 245, 0.4);
+}
+.mini-stat.border-none { border-bottom: none; }
+
+.stat-label {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+.stat-number.green { color: var(--success-green); }
+.stat-number.purple { color: var(--primary-purple); }
+
+/* ---- Slide-Up Animation (Modals) ---- */
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slideUpFade 0.4s var(--spring-easing) forwards;
+}
+
+/* ---- Edit Button ---- */
+.icon-btn-edit {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.icon-btn-edit:hover {
+  background: #eef6ff;
+  border-color: #90b8e0;
+  color: #4a8bc7;
+  transform: scale(1.08);
+}
+
+/* ---- Summary Icon Color Variants ---- */
+.task-icon {
+  background: linear-gradient(135deg, #f4a6c8 0%, #ea8eb6 100%);
+  box-shadow: 0 8px 18px rgba(234, 142, 182, 0.4);
+}
+.sequence-icon {
+  background: linear-gradient(135deg, #fcd57e 0%, #fbd174 100%);
+  box-shadow: 0 8px 18px rgba(251, 209, 116, 0.45);
+}
+.event-icon {
+  background: linear-gradient(135deg, #c3b0f5 0%, #af99eb 100%);
+  box-shadow: 0 8px 18px rgba(175, 153, 235, 0.4);
+}
+
+/* ---- Small Icon Button (mobile menu) ---- */
+.icon-btn-small {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.icon-btn-small:hover {
+  background: var(--sidebar-hover);
+  color: var(--primary-pink);
+}
+
+/* ---- Form Hint Box ---- */
+.form-hint-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  background: #fef9e7;
+  border: 1px dashed #e6c94d;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9a7d1a;
+}
+
+.form-hint-box strong {
+  color: #7a6100;
+}
+
+/* ---- Status Labels ---- */
+.status-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+.status-label.success {
+  background-color: #e6f6e8;
+  color: var(--success-green);
+}
+.status-label.pending {
+  background-color: #fdf2f2;
+  color: var(--danger-red);
+}
+.status-label.warning {
+  background: #fff8e6;
+  color: var(--warning-yellow);
+}
+
+/* ---- Responsive: Shared Mobile ---- */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .mobile-full-width {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .professores-summary-row {
+    max-width: 100%;
+  }
+}

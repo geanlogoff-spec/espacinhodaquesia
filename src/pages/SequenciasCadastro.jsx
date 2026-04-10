@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Plus, ClipboardList, X, Calendar, CalendarRange, Send, Trash2 } from 'lucide-react';
 import './Sequencias.css';
 
 const SequenciasCadastro = () => {
-  const { professores, entregas, handleAddEntrega, handleRemoverEntrega } = useContext(AppContext);
+  const { professores, entregas, handleAddEntrega, handleRemoverEntrega } = useAppStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newEntrega, setNewEntrega] = useState({

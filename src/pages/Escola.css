@@ -264,27 +264,7 @@
   margin-left: 0.15rem;
 }
 
-/* Edit button */
-.icon-btn-edit {
-  background: transparent;
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: all 0.2s ease;
-}
-
-.icon-btn-edit:hover {
-  background: #eef6ff;
-  border-color: #90b8e0;
-  color: #4a8bc7;
-  transform: scale(1.08);
-}
+/* .icon-btn-edit — see index.css for shared definition */
 
 /* Escola vinculo badge */
 .escola-vinculo {
@@ -295,23 +275,7 @@
   font-weight: 700;
 }
 
-/* Form hint box (no schools available) */
-.form-hint-box {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.85rem 1rem;
-  background: #fef9e7;
-  border: 1px dashed #e6c94d;
-  border-radius: var(--radius-md);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #9a7d1a;
-}
-
-.form-hint-box strong {
-  color: #7a6100;
-}
+/* .form-hint-box — see index.css for shared definition */
 
 /* Mobile */
 @media (max-width: 768px) {

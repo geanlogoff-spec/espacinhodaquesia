@@ -2,12 +2,12 @@ import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Users, Plus, Edit3, Trash2, Clock, CheckCircle2, AlertCircle, X } from 'lucide-react';
 import './Professores.css';
 
 const Professores = () => {
-  const { professores, handleAddProf, handleComputarAula, handleRemoverProf } = useContext(AppContext);
+  const { professores, handleAddProf, handleComputarAula, handleRemoverProf } = useAppStore();
 
   // State for Add Teacher form Modal
   const [showAddForm, setShowAddForm] = useState(false);

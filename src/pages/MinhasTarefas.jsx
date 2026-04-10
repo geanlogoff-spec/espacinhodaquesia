@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { CheckSquare, Plus, Edit3, Trash2, AlertCircle, Bell, Calendar as CalendarIcon } from 'lucide-react';
 import '../pages/Dashboard.css';
 import './MinhasTarefas.css';
@@ -11,7 +11,7 @@ const MinhasTarefas = () => {
     tarefas, handleAddTarefa, toggleTarefa, handleRemoverTarefa, 
     notas, handleAddNota, handleRemoverNota,
     eventos 
-  } = useContext(AppContext);
+  } = useAppStore();
 
   // --- Local Form States ---
   const [newTaskText, setNewTaskText] = useState('');

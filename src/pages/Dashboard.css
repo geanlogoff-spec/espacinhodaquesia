@@ -76,29 +76,7 @@
   box-shadow: 0 15px 35px rgba(220, 190, 210, 0.25);
 }
 
-.summary-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.task-icon { 
-  background: linear-gradient(135deg, #f4a6c8 0%, #ea8eb6 100%); 
-  box-shadow: 0 8px 18px rgba(234, 142, 182, 0.4);
-}
-.sequence-icon { 
-  background: linear-gradient(135deg, #fcd57e 0%, #fbd174 100%); 
-  box-shadow: 0 8px 18px rgba(251, 209, 116, 0.45);
-}
-.event-icon { 
-  background: linear-gradient(135deg, #c3b0f5 0%, #af99eb 100%); 
-  box-shadow: 0 8px 18px rgba(175, 153, 235, 0.4);
-}
+/* .summary-icon, .task-icon, .sequence-icon, .event-icon — see index.css */
 
 .summary-info h3 {
   font-size: 1.1rem;
@@ -213,17 +191,7 @@
   text-align: right;
 }
 
-.status-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-.status-label.success { background: #eefbf3; color: var(--success-green); }
-.status-label.warning { background: #fff8e6; color: var(--warning-yellow); }
+/* .status-label — see index.css for shared definition */
 
 /* Quick Action Overrides */
 .btn-small {

@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
+import Loading from '../components/Loading';
 import { Menu } from 'lucide-react';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import './MainLayout.css';
 
 const MainLayout = () => {
-  const { perfil, isLoggedIn } = useContext(AppContext);
+  const { perfil, isLoggedIn, loading, initAuth } = useAppStore();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  // Initialize auth state from existing session on first mount
+  useEffect(() => {
+    initAuth();
+  }, []);
 
   // Close mobile sidebar on resize
   useEffect(() => {
@@ -21,6 +27,11 @@ const MainLayout = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Show loading while checking session
+  if (loading) {
+    return <Loading />;
+  }
 
   // Guardian Interceptor
   if (!isLoggedIn) {

@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { School, Plus, X, CheckCircle2, MapPin, Phone, Mail, Pencil, Trash2 } from 'lucide-react';
 import './Escola.css';
 
 const EscolaCadastro = () => {
-  const { escolas = [], handleAddEscola, handleEditEscola, handleRemoverEscola } = useContext(AppContext);
+  const { escolas = [], handleAddEscola, handleEditEscola, handleRemoverEscola } = useAppStore();
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingEscola, setEditingEscola] = useState(null);

@@ -2,12 +2,12 @@ import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Search, Plus, ClipboardList, Check, X, ChevronRight, ChevronDown, Calendar, Trash2 } from 'lucide-react';
 import './Sequencias.css';
 
 const Sequencias = () => {
-  const { professores, entregas, handleAddEntrega, toggleStatusProfessor, handleRemoverEntrega } = useContext(AppContext);
+  const { professores, entregas, handleAddEntrega, toggleStatusProfessor, handleRemoverEntrega } = useAppStore();
 
   // Modal State
   const [showAddModal, setShowAddModal] = useState(false);

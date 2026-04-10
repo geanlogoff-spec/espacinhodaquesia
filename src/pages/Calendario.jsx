@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Search, Plus, Calendar as CalendarIcon, Star, MessageCircle, Folder, ChevronLeft, ChevronRight, BookOpen, X, Trash2, CheckSquare, Sun } from 'lucide-react';
 import './Calendario.css';
 
 const Calendario = () => {
-  const { eventos, handleAddEvento, handleRemoverEvento } = useContext(AppContext);
+  const { eventos, handleAddEvento, handleRemoverEvento } = useAppStore();
 
   // States
   const [currentDate, setCurrentDate] = useState(new Date());

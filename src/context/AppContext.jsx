@@ -681,7 +681,7 @@ export const AppProvider = ({ children }) => {
   /* ==================================
      Auth & Security Mock
      ================================== */
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useLocalState('portal_isLoggedIn', false);
 
   const handleLogin = (email, password) => {
     // Simulador: Sucesso instantâneo (será ligado ao banco Supabase futuramente)

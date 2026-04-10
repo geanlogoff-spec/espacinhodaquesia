@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Card from '../components/Card';
 import Badge from '../components/Badge';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 import { CheckSquare, ClipboardList, CalendarDays, ChevronRight, Check, Play, Edit3, XCircle } from 'lucide-react';
 import './Dashboard.css';
@@ -12,7 +12,7 @@ const Dashboard = () => {
     tarefas, toggleTarefa,
     entregas, toggleStatusProfessor, professores,
     eventos, notas, perfil 
-  } = useContext(AppContext);
+  } = useAppStore();
 
   // 1. Matemáticas para os Resumos
   const pendingTasks = tarefas.filter(t => !t.completed).length;

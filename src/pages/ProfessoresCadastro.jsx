@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import { Users, Plus, X, CheckCircle2, Pencil, School, GraduationCap, BookOpen, Phone, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import './Professores.css';
 
@@ -9,7 +9,7 @@ const ProfessoresCadastro = () => {
   const {
     professores, handleAddProf, handleEditProf, handleRemoverProf,
     escolas = [], turmas = []
-  } = useContext(AppContext);
+  } = useAppStore();
 
   const [showForm, setShowForm] = useState(false);
   const [editingProf, setEditingProf] = useState(null);

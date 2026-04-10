@@ -21,11 +21,11 @@ import {
   School,
   GraduationCap
 } from 'lucide-react';
-import { AppContext } from '../context/AppContext';
+import { useAppStore } from '../store/useAppStore';
 import './Sidebar.css';
 
 const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen }) => {
-  const { handleLogout } = useContext(AppContext);
+  const { handleLogout } = useAppStore();
   const location = useLocation();
 
   // Submenu expansion state

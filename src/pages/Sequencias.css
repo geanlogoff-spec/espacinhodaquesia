@@ -6,12 +6,7 @@
   margin: 0 auto;
 }
 
-.seq-header-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
+/* .seq-header-title — see index.css for shared definition */
 
 .seq-toolbar {
   display: flex;
@@ -197,132 +192,7 @@
   border-bottom: 1px dashed rgba(195, 176, 245, 0.2);
 }
 
-.status-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: var(--radius-pill);
-  font-size: 0.8rem;
-  font-weight: 800;
-}
-.status-label.success {
-  background-color: #e6f6e8;
-  color: var(--success-green);
-}
-.status-label.pending {
-  background-color: #fdf2f2;
-  color: var(--danger-red);
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.modal-content {
-  background-color: white;
-  border-radius: var(--radius-lg);
-  width: 100%;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-  overflow: hidden;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h3 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin: 0;
-}
-
-.icon-btn-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-.icon-btn-close:hover {
-  background-color: var(--bg-color);
-  color: var(--danger-red);
-}
-
-.modal-body {
-  padding: 1.5rem;
-  overflow-y: auto;
-}
-
-.add-prof-form-modal {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-row {
-  display: flex;
-  gap: 1.25rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.form-group.full-width {
-  width: 100%;
-}
-
-.form-group label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-@keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-slide-up {
-  animation: slideUpFade 0.4s var(--spring-easing) forwards;
-}
+/* Modal, Form, icon-btn-close, icon-btn-delete, animate-slide-up — see index.css for shared definitions */
 
 /* Banners */
 .seq-banner {
@@ -473,26 +343,7 @@
   flex-shrink: 0;
 }
 
-/* Delete button on cadastro items */
-.icon-btn-delete {
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: #ccc;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
-
-.icon-btn-delete:hover {
-  color: #e74c5e;
-  background: #fef2f2;
-}
+/* .icon-btn-delete — see index.css for shared definition */
 
 @media (max-width: 768px) {
   .seq-cadastro-details {

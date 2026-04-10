@@ -480,6 +480,26 @@ body {
   cursor: pointer;
 }
 
+/* ---- Search Bar ---- */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--sidebar-bg);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-pill);
+  width: 300px;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
 /* ---- Badges ---- */
 .prof-badge {
   display: inline-flex;

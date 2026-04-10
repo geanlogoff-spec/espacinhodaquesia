@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
-import { Folder, Link as LinkIcon, Download, Search, Plus, Trash2, Copy, Share2, CheckCircle2 } from 'lucide-react';
+import { Folder, Link as LinkIcon, Download, Search, Plus, Trash2, Copy, Share2, CheckCircle2, X } from 'lucide-react';
 import './Arquivos.css';
 
 const Arquivos = () => {
@@ -81,7 +81,7 @@ const Arquivos = () => {
 
       <Card className="stagger-1">
         <div className="arq-toolbar">
-          <div className="search-bar" style={{border: '1px solid var(--card-border)', flex: 1, maxWidth: '400px'}}>
+          <div className="search-bar" style={{flex: 1, maxWidth: '400px'}}>
               <Search size={18} color="var(--text-light)" />
               <input 
                 type="text" 
@@ -143,45 +143,49 @@ const Arquivos = () => {
           <div className="modal-content animate-fade-in" style={{maxWidth: '500px'}}>
             <div className="modal-header">
               <h3>Anexar Material à Nuvem</h3>
-              <button className="close-btn" onClick={() => setShowModal(false)}>&times;</button>
+              <button type="button" className="icon-btn-close" onClick={() => setShowModal(false)}><X size={20}/></button>
             </div>
-            <form className="modal-body" onSubmit={handleSubmitLink}>
-              <div className="form-group">
-                <label>Título do Material</label>
-                <input 
-                  type="text" 
-                  value={newTitle} 
-                  onChange={(e) => setNewTitle(e.target.value)} 
-                  placeholder="Ex: Calendário Oficial 2024"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Onde ele está armazenado?</label>
-                <select value={newPlat} onChange={(e) => setNewPlat(e.target.value)}>
-                  <option value="Google Drive">Google Drive</option>
-                  <option value="OneDrive">OneDrive</option>
-                  <option value="Canva">Canva</option>
-                  <option value="Link Externo">Outro Link Externo</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>URL / Link de Compartilhamento</label>
-                <input 
-                  type="url" 
-                  value={newUrl} 
-                  onChange={(e)=>setNewUrl(e.target.value)} 
-                  placeholder="https://drive.google.com/..."
-                  required
-                />
-                <small style={{color:'var(--text-light)', marginTop:'0.3rem', display:'block'}}>Certifique-se de que o link do seu Drive tem permissão de leitura.</small>
-              </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmitLink} className="add-prof-form-modal">
+                <div className="form-group full-width">
+                  <label>Título do Material</label>
+                  <input 
+                    type="text" 
+                    className="custom-input"
+                    value={newTitle} 
+                    onChange={(e) => setNewTitle(e.target.value)} 
+                    placeholder="Ex: Calendário Oficial 2024"
+                    required
+                  />
+                </div>
+                <div className="form-group full-width">
+                  <label>Onde ele está armazenado?</label>
+                  <select className="custom-input" value={newPlat} onChange={(e) => setNewPlat(e.target.value)}>
+                    <option value="Google Drive">Google Drive</option>
+                    <option value="OneDrive">OneDrive</option>
+                    <option value="Canva">Canva</option>
+                    <option value="Link Externo">Outro Link Externo</option>
+                  </select>
+                </div>
+                <div className="form-group full-width">
+                  <label>URL / Link de Compartilhamento</label>
+                  <input 
+                    type="url" 
+                    className="custom-input"
+                    value={newUrl} 
+                    onChange={(e)=>setNewUrl(e.target.value)} 
+                    placeholder="https://drive.google.com/..."
+                    required
+                  />
+                  <small style={{color:'var(--text-light)', marginTop:'0.3rem', display:'block'}}>Certifique-se de que o link do seu Drive tem permissão de leitura.</small>
+                </div>
 
-              <div className="modal-actions" style={{marginTop: '2rem'}}>
-                <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancelar</button>
-                <button type="submit" className="btn btn-green">Salvar e Liberar no Portal</button>
-              </div>
-            </form>
+                <div className="modal-actions" style={{marginTop: '1rem'}}>
+                  <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancelar</button>
+                  <button type="submit" className="btn btn-green">Salvar e Liberar no Portal</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>,
         document.body

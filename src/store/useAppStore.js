@@ -817,12 +817,25 @@ export const useAppStore = create((set, get) => ({
 
   handleRemoverEvento: async (id) => {
     if (!supabase) return;
+    
+    const evento = get().eventos.find(e => e.id === id);
+    if (!evento) return;
+
     const { error } = await supabase.from('eventos').delete().eq('id', id);
     if (error) {
       if (import.meta.env.DEV) console.error('Erro ao remover evento:', error);
       return;
     }
+    
     set(state => ({ eventos: state.eventos.filter(e => e.id !== id) }));
+
+    // Se for um evento de Tarefa, remove a tarefa correspondente da UI e DB
+    if (evento.tipo === 'Tarefas') {
+      const tarefa = get().tarefas.find(t => t.text === evento.titulo && t.data === evento.data);
+      if (tarefa) {
+        await get().handleRemoverTarefa(tarefa.id);
+      }
+    }
   },
 
   // ============================================================
@@ -878,9 +891,24 @@ export const useAppStore = create((set, get) => ({
   },
 
   handleRemoverTarefa: async (id) => {
+    const tarefa = get().tarefas.find(t => t.id === id);
+    if (!tarefa) return;
+
     const { error } = await supabase.from('tarefas').delete().eq('id', id);
     if (!error) {
       set(state => ({ tarefas: state.tarefas.filter(t => t.id !== id) }));
+
+      // Remove o evento correspondente no calendário se houver
+      if (tarefa.data) {
+        const evento = get().eventos.find(e => 
+          e.titulo === tarefa.text && 
+          e.data === tarefa.data && 
+          e.tipo === 'Tarefas'
+        );
+        if (evento) {
+          await get().handleRemoverEvento(evento.id);
+        }
+      }
     }
   },
 

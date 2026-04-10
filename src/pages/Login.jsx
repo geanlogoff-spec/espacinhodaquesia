@@ -45,7 +45,7 @@ const Login = () => {
       <div className="login-brand-side">
          <div className="brand-header">
            <School size={36} color="white" />
-           <span className="brand-name">{perfil.tituloDaPlataforma} {perfil.nome}</span>
+           <span className="brand-name">Espacinho da Quesia</span>
          </div>
          
          <div className="brand-content">

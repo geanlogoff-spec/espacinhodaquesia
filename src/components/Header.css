@@ -197,3 +197,35 @@
 .settings-item.danger:hover {
   background: #ffeef0;
 }
+
+/* ---- Profile Modal: Preview Box ---- */
+.profile-preview-box {
+  background: var(--sidebar-bg);
+  border: 1px dashed var(--card-border);
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.profile-preview-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.profile-preview-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary-purple);
+}
+
+/* ---- Profile Modal: Emoji Select ---- */
+.profile-emoji-select {
+  font-size: 1.4rem !important;
+  text-align: center;
+  padding: 0.45rem 0.5rem !important;
+}

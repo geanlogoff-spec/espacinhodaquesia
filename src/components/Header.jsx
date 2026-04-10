@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Bell, Settings, LogOut, Moon, User, AlertCircle, Save, ExternalLink } from 'lucide-react';
+import { Bell, Settings, LogOut, Moon, User, AlertCircle, Save, ExternalLink, X } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
@@ -152,45 +152,52 @@ const Header = () => {
 
       {/* Modal Profile Settings */}
       {isProfileModalOpen && createPortal(
-        <div className="modal-overlay">
-          <div className="modal-content animate-fade-in" style={{maxWidth: '450px'}}>
+        <div className="modal-overlay animate-fade-in">
+          <div className="modal-content animate-slide-up" style={{maxWidth: '480px'}}>
             <div className="modal-header">
               <h3>Identidade da Plataforma</h3>
-              <button className="close-btn" onClick={() => setIsProfileModalOpen(false)}>&times;</button>
+              <button className="icon-btn-close" onClick={() => setIsProfileModalOpen(false)}><X size={20} /></button>
             </div>
             
-            <form className="modal-body" onSubmit={handleSaveProfile} style={{display: 'flex', flexDirection: 'column', gap: '1.2rem'}}>
-              
-              <div className="form-group" style={{marginBottom: 0}}>
-                <label>Seu Título ou Formação</label>
-                <select value={editCargo} onChange={e=>setEditCargo(e.target.value)}>
-                   <option value="Coordenadora">Coordenadora</option>
-                   <option value="Coordenador">Coordenador</option>
-                   <option value="Diretora">Diretora</option>
-                   <option value="Diretor">Diretor</option>
-                   <option value="Supervisora">Supervisora</option>
-                   <option value="Professor">Professor</option>
-                   <option value="Professora">Professora</option>
-                   <option value="">(Nenhum, apenas o nome)</option>
-                </select>
-              </div>
+            <div className="modal-body">
+              <form onSubmit={handleSaveProfile} className="add-prof-form-modal">
+                
+                <div className="form-row">
+                  <div className="form-group full-width">
+                    <label>Seu Título ou Formação</label>
+                    <select className="custom-select" value={editCargo} onChange={e=>setEditCargo(e.target.value)}>
+                       <option value="Coordenadora">Coordenadora</option>
+                       <option value="Coordenador">Coordenador</option>
+                       <option value="Diretora">Diretora</option>
+                       <option value="Diretor">Diretor</option>
+                       <option value="Supervisora">Supervisora</option>
+                       <option value="Professor">Professor</option>
+                       <option value="Professora">Professora</option>
+                       <option value="">(Nenhum, apenas o nome)</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div className="form-group" style={{marginBottom: 0}}>
-                <label>Nome Principal</label>
-                <input 
-                  type="text" 
-                  value={editNome} 
-                  onChange={e=>setEditNome(e.target.value)}
-                  placeholder="Seu nome"
-                  required
-                />
-              </div>
+                <div className="form-row">
+                  <div className="form-group full-width">
+                    <label>Nome Principal</label>
+                    <input 
+                      type="text"
+                      className="custom-input"
+                      value={editNome} 
+                      onChange={e=>setEditNome(e.target.value)}
+                      placeholder="Seu nome"
+                      required
+                    />
+                  </div>
+                </div>
 
-              <div style={{display: 'flex', gap: '1rem'}}>
-                  <div className="form-group" style={{flex: 1, marginBottom: 0}}>
+                <div className="form-row">
+                  <div className="form-group">
                     <label>Título Inicial</label>
                     <input 
-                      type="text" 
+                      type="text"
+                      className="custom-input"
                       value={editTitulo} 
                       onChange={e=>setEditTitulo(e.target.value)}
                       placeholder="Ex: Espacinho do"
@@ -198,9 +205,9 @@ const Header = () => {
                     />
                   </div>
                   
-                  <div className="form-group" style={{width: '90px', marginBottom: 0}}>
+                  <div className="form-group" style={{maxWidth: '100px'}}>
                     <label>Avatar</label>
-                    <select value={editEmoji} onChange={e=>setEditEmoji(e.target.value)} style={{fontSize: '1.5rem', padding: '0.4rem'}}>
+                    <select className="custom-select profile-emoji-select" value={editEmoji} onChange={e=>setEditEmoji(e.target.value)}>
                        <option value="👸">👸</option>
                        <option value="👑">👑</option>
                        <option value="👩‍🏫">👩‍🏫</option>
@@ -211,20 +218,21 @@ const Header = () => {
                        <option value="🎯">🎯</option>
                     </select>
                   </div>
-              </div>
+                </div>
 
-              <div className="preview-brand" style={{background: '#f1f3f7', padding: '1rem', borderRadius: '12px', marginTop: '0.5rem'}}>
-                 <span style={{fontSize: '0.8rem', color: 'var(--text-muted)'}}>Assim ficará seu cabeçalho:</span>
-                 <h4 style={{margin: '0.3rem 0 0 0', color: 'var(--primary-purple)', fontSize: '1.1rem'}}>
-                    {editTitulo} {editCargo} {editNome} {editEmoji}
-                 </h4>
-              </div>
+                <div className="profile-preview-box">
+                   <span className="profile-preview-label">Assim ficará seu cabeçalho:</span>
+                   <span className="profile-preview-text">
+                      {editTitulo} {editCargo} {editNome} {editEmoji}
+                   </span>
+                </div>
 
-              <div className="modal-actions" style={{marginTop: '1rem'}}>
-                <button type="button" className="btn btn-outline" onClick={() => setIsProfileModalOpen(false)}>Cancelar</button>
-                <button type="submit" className="btn btn-green"><Save size={16}/> Salvar Alterações</button>
-              </div>
-            </form>
+                <div className="modal-actions">
+                  <button type="button" className="btn btn-outline" onClick={() => setIsProfileModalOpen(false)}>Cancelar</button>
+                  <button type="submit" className="btn btn-green"><Save size={16}/> Salvar Alterações</button>
+                </div>
+              </form>
+            </div>
 
           </div>
         </div>,

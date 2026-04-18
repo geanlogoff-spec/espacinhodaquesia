@@ -20,7 +20,7 @@ const Dashboard = () => {
   // Última Sequência Ativa
   const ultimaEntrega = entregas.length > 0 ? entregas[0] : null;
   const pendenciasUltima = ultimaEntrega
-    ? Object.values(ultimaEntrega.statusVinculos || {}).filter(s => s === 'pendente').length
+    ? Object.values(ultimaEntrega.statusVinculos || {}).filter(v => (typeof v === 'object' ? v.status : v) === 'pendente').length
     : 0;
 
   // Calendário Matemático para HOJE
@@ -106,8 +106,9 @@ const Dashboard = () => {
                      const sv = ultimaEntrega.statusVinculos || {};
                      const profKeys = Object.keys(sv).filter(k => k.startsWith(`${prof.id}|`));
                      if (profKeys.length === 0) return null;
-                     const allEntregue = profKeys.every(k => sv[k] === 'entregue');
-                     const entregueCount = profKeys.filter(k => sv[k] === 'entregue').length;
+                     const getS = (v) => typeof v === 'object' ? v.status : v;
+                     const allEntregue = profKeys.every(k => getS(sv[k]) === 'entregue');
+                     const entregueCount = profKeys.filter(k => getS(sv[k]) === 'entregue').length;
                      return (
                        <tr key={prof.id}>
                           <td>{prof.nome}</td>

@@ -61,7 +61,7 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* Rota Pública: Professores pelo Celular */}
-            <Route path="/portal" element={<PortalPublico />} />
+            <Route path="/portal/:userId" element={<PortalPublico />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

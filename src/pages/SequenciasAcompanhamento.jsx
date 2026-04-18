@@ -1,11 +1,14 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
-import { Search, ClipboardList, Check, X, ChevronDown, ChevronUp, Calendar, GraduationCap, BookOpen } from 'lucide-react';
+import {
+  Search, ClipboardList, Check, X, ChevronDown, ChevronUp,
+  Calendar, GraduationCap, BookOpen, CalendarRange, CalendarCheck, AlertTriangle, Clock
+} from 'lucide-react';
 import './Sequencias.css';
 
 const SequenciasAcompanhamento = () => {
-  const { professores, turmas, entregas, toggleStatusVinculo } = useAppStore();
+  const { professores, turmas, entregas, toggleStatusVinculo, updateExecucaoVinculo } = useAppStore();
 
   const [expandedId, setExpandedId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,16 +29,22 @@ const SequenciasAcompanhamento = () => {
     return t ? t.nome : id;
   };
 
+  // Helper: extract status from object or legacy string
+  const getStatus = (val) => (typeof val === 'object' ? val?.status : val) || 'pendente';
+  const getExecucao = (val) => typeof val === 'object' ? val : { status: val || 'pendente', dataExecucao: null, executada: false };
+
   // Derive professor-level status from statusVinculos
   const getProfStatusForEntrega = (entrega, profId) => {
     const sv = entrega.statusVinculos || {};
     const profKeys = Object.keys(sv).filter(k => k.startsWith(`${profId}|`));
-    if (profKeys.length === 0) return { total: 0, entregues: 0, allDone: false };
-    const entregues = profKeys.filter(k => sv[k] === 'entregue').length;
+    if (profKeys.length === 0) return { total: 0, entregues: 0, allDone: false, executadas: 0 };
+    const entregues = profKeys.filter(k => getStatus(sv[k]) === 'entregue').length;
+    const executadas = profKeys.filter(k => getExecucao(sv[k]).executada).length;
     return {
       total: profKeys.length,
       entregues,
-      allDone: entregues === profKeys.length
+      allDone: entregues === profKeys.length,
+      executadas
     };
   };
 
@@ -46,7 +55,7 @@ const SequenciasAcompanhamento = () => {
     entregas.forEach(e => {
       const sv = e.statusVinculos || {};
       totalVinculos += Object.keys(sv).length;
-      entregueVinculos += Object.values(sv).filter(s => s === 'entregue').length;
+      entregueVinculos += Object.values(sv).filter(v => getStatus(v) === 'entregue').length;
     });
     return { totalVinculos, entregueVinculos, pendentes: totalVinculos - entregueVinculos };
   }, [entregas]);
@@ -58,6 +67,52 @@ const SequenciasAcompanhamento = () => {
   const formatDate = (dateStr) => {
     if (!dateStr) return '—';
     return new Date(dateStr + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  };
+
+  const formatDateShort = (dateStr) => {
+    if (!dateStr) return '—';
+    return new Date(dateStr + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  };
+
+  const todayStr = (() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  })();
+
+  // Check if a date is within the execution period
+  const checkPeriodo = (dataExecucao, execInicio, execFim) => {
+    if (!dataExecucao) return null;
+    if (!execInicio || !execFim) return null;
+    const exec = new Date(dataExecucao);
+    const inicio = new Date(execInicio);
+    const fim = new Date(execFim);
+    if (exec >= inicio && exec <= fim) return 'dentro';
+    return 'fora';
+  };
+
+  const getDiasAtraso = (dataExecucao, execFim) => {
+    if (!dataExecucao || !execFim) return 0;
+    const exec = new Date(dataExecucao);
+    const fim = new Date(execFim);
+    const diff = Math.ceil((exec - fim) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? diff : 0;
+  };
+
+  // Handle execution toggle
+  const handleToggleExecucao = (entregaId, chave, current) => {
+    const exec = getExecucao(current);
+    if (exec.executada) {
+      // Unmark execution
+      updateExecucaoVinculo(entregaId, chave, null, false);
+    } else {
+      // Mark as executed with today's date
+      updateExecucaoVinculo(entregaId, chave, todayStr, true);
+    }
+  };
+
+  // Handle date change
+  const handleDateChange = (entregaId, chave, newDate) => {
+    updateExecucaoVinculo(entregaId, chave, newDate, true);
   };
 
   return (
@@ -99,7 +154,7 @@ const SequenciasAcompanhamento = () => {
             filteredEntregas.map(entrega => {
               const sv = entrega.statusVinculos || {};
               const totalVinc = Object.keys(sv).length;
-              const entregueVinc = Object.values(sv).filter(s => s === 'entregue').length;
+              const entregueVinc = Object.values(sv).filter(v => getStatus(v) === 'entregue').length;
               const isExpanded = expandedId === entrega.id;
               const percentage = totalVinc > 0 ? Math.round((entregueVinc / totalVinc) * 100) : 0;
 
@@ -123,6 +178,17 @@ const SequenciasAcompanhamento = () => {
                   {/* Accordion Body — Professors */}
                   {isExpanded && (
                     <div className="seq-accordion-body animate-fade-in">
+                      {/* Execution Period Info */}
+                      {(entrega.execucaoInicio || entrega.execucaoFim) && (
+                        <div className="acomp-exec-period-banner">
+                          <CalendarRange size={15} />
+                          <span className="acomp-exec-period-label">Período de Execução:</span>
+                          <span className="acomp-exec-period-dates">
+                            {formatDate(entrega.execucaoInicio)} — {formatDate(entrega.execucaoFim)}
+                          </span>
+                        </div>
+                      )}
+
                       {/* Mini progress bar */}
                       <div className="acomp-progress-bar-wrapper">
                         <div className="acomp-progress-track">
@@ -151,6 +217,7 @@ const SequenciasAcompanhamento = () => {
                                     <span className="acomp-prof-name">{prof.nome}</span>
                                     <span className="acomp-prof-count">
                                       {profStatus.entregues}/{profStatus.total} disciplinas entregues
+                                      {profStatus.executadas > 0 && ` • ${profStatus.executadas} executadas`}
                                     </span>
                                   </div>
                                 </div>
@@ -181,25 +248,73 @@ const SequenciasAcompanhamento = () => {
                                         <div className="acomp-disc-list">
                                           {vinc.disciplinas.map(disc => {
                                             const chave = `${prof.id}|${vinc.turmaId}|${disc}`;
-                                            const isEntregue = sv[chave] === 'entregue';
+                                            const vinculoData = sv[chave];
+                                            const isEntregue = getStatus(vinculoData) === 'entregue';
+                                            const execData = getExecucao(vinculoData);
+                                            const periodoStatus = execData.executada
+                                              ? checkPeriodo(execData.dataExecucao, entrega.execucaoInicio, entrega.execucaoFim)
+                                              : null;
+                                            const diasAtraso = periodoStatus === 'fora'
+                                              ? getDiasAtraso(execData.dataExecucao, entrega.execucaoFim)
+                                              : 0;
 
                                             return (
                                               <div key={chave} className={`acomp-disc-row ${isEntregue ? 'entregue' : ''}`}>
-                                                <div className="acomp-disc-info">
-                                                  <BookOpen size={13} />
-                                                  <span className="acomp-disc-name">{disc}</span>
+                                                {/* Row 1: Discipline name + entregue button */}
+                                                <div className="acomp-disc-main">
+                                                  <div className="acomp-disc-info">
+                                                    <BookOpen size={13} />
+                                                    <span className="acomp-disc-name">{disc}</span>
+                                                  </div>
+                                                  <button
+                                                    className={`acomp-toggle-btn ${isEntregue ? 'done' : 'pending'}`}
+                                                    onClick={() => toggleStatusVinculo(entrega.id, chave)}
+                                                    title={isEntregue ? 'Desmarcar entrega' : 'Marcar como entregue'}
+                                                  >
+                                                    {isEntregue ? (
+                                                      <><Check size={13} /> Entregue</>
+                                                    ) : (
+                                                      <><X size={13} /> Pendente</>
+                                                    )}
+                                                  </button>
                                                 </div>
-                                                <button
-                                                  className={`acomp-toggle-btn ${isEntregue ? 'done' : 'pending'}`}
-                                                  onClick={() => toggleStatusVinculo(entrega.id, chave)}
-                                                  title={isEntregue ? 'Desmarcar entrega' : 'Marcar como entregue'}
-                                                >
-                                                  {isEntregue ? (
-                                                    <><Check size={13} /> Entregue</>
-                                                  ) : (
-                                                    <><X size={13} /> Pendente</>
+
+                                                {/* Row 2: Execution tracking */}
+                                                <div className="acomp-exec-row">
+                                                  <button
+                                                    className={`acomp-exec-btn ${execData.executada ? 'executed' : 'not-executed'}`}
+                                                    onClick={() => handleToggleExecucao(entrega.id, chave, vinculoData)}
+                                                    title={execData.executada ? 'Desmarcar execução' : 'Marcar como executada'}
+                                                  >
+                                                    {execData.executada ? (
+                                                      <><CalendarCheck size={12} /> Executada</>
+                                                    ) : (
+                                                      <><Clock size={12} /> Não executada</>
+                                                    )}
+                                                  </button>
+
+                                                  {execData.executada && (
+                                                    <div className="acomp-exec-date-group">
+                                                      <input
+                                                        type="date"
+                                                        className="acomp-exec-date-input"
+                                                        value={execData.dataExecucao || ''}
+                                                        onChange={(e) => handleDateChange(entrega.id, chave, e.target.value)}
+                                                      />
+                                                      {periodoStatus === 'dentro' && (
+                                                        <span className="acomp-exec-badge dentro">
+                                                          <Check size={11} /> No prazo
+                                                        </span>
+                                                      )}
+                                                      {periodoStatus === 'fora' && (
+                                                        <span className="acomp-exec-badge fora">
+                                                          <AlertTriangle size={11} /> Fora do prazo
+                                                          {diasAtraso > 0 && ` (${diasAtraso}d)`}
+                                                        </span>
+                                                      )}
+                                                    </div>
                                                   )}
-                                                </button>
+                                                </div>
                                               </div>
                                             );
                                           })}

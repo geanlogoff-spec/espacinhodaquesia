@@ -48,7 +48,7 @@ function buildProfessorFlat(prof, vinculos, registroAulas) {
 
 // Helper: Transform entregas + entrega_status into flat format
 // DB: entregas + entrega_status (per vinculo_id)
-// UI: { id, titulo, tipo, execucaoInicio, execucaoFim, prazo, statusVinculos: {'profId|turmaId|disc': 'pendente'|'entregue'} }
+// UI: { id, titulo, tipo, execucaoInicio, execucaoFim, prazo, statusVinculos: {'profId|turmaId|disc': { status, dataExecucao, executada }} }
 function buildEntregaFlat(entrega, statusList, allVinculos) {
   const statusVinculos = {};
   (statusList || []).forEach(es => {
@@ -59,7 +59,11 @@ function buildEntregaFlat(entrega, statusList, allVinculos) {
     const turmaId = vinculo.turma_disciplinas?.turma_id;
     const discNome = vinculo.turma_disciplinas?.nome;
     if (!profId || !turmaId || !discNome) return;
-    statusVinculos[`${profId}|${turmaId}|${discNome}`] = es.status;
+    statusVinculos[`${profId}|${turmaId}|${discNome}`] = {
+      status: es.status,
+      dataExecucao: es.data_execucao || null,
+      executada: es.executada || false
+    };
   });
 
   return {
@@ -717,7 +721,8 @@ export const useAppStore = create((set, get) => ({
     // Get current status
     const entrega = get().entregas.find(e => e.id === entregaId);
     if (!entrega) return;
-    const currentStatus = entrega.statusVinculos?.[chave] || 'pendente';
+    const current = entrega.statusVinculos?.[chave];
+    const currentStatus = (typeof current === 'object' ? current?.status : current) || 'pendente';
     const newStatus = currentStatus === 'entregue' ? 'pendente' : 'entregue';
 
     // Update in Supabase
@@ -730,9 +735,11 @@ export const useAppStore = create((set, get) => ({
       set(state => ({
         entregas: state.entregas.map(e => {
           if (e.id === entregaId) {
+            const prev = e.statusVinculos?.[chave];
+            const prevObj = typeof prev === 'object' ? prev : { status: prev || 'pendente', dataExecucao: null, executada: false };
             return {
               ...e,
-              statusVinculos: { ...e.statusVinculos, [chave]: newStatus }
+              statusVinculos: { ...e.statusVinculos, [chave]: { ...prevObj, status: newStatus } }
             };
           }
           return e;
@@ -747,7 +754,8 @@ export const useAppStore = create((set, get) => ({
 
     const sv = entrega.statusVinculos || {};
     const profKeys = Object.keys(sv).filter(k => k.startsWith(`${profId}|`));
-    const allEntregue = profKeys.every(k => sv[k] === 'entregue');
+    const getStatus = (val) => (typeof val === 'object' ? val?.status : val) || 'pendente';
+    const allEntregue = profKeys.every(k => getStatus(sv[k]) === 'entregue');
     const newStatus = allEntregue ? 'pendente' : 'entregue';
 
     // Find all vinculo IDs for this professor
@@ -766,11 +774,60 @@ export const useAppStore = create((set, get) => ({
 
     if (!error) {
       const newSv = { ...sv };
-      profKeys.forEach(k => { newSv[k] = newStatus; });
+      profKeys.forEach(k => {
+        const prev = typeof sv[k] === 'object' ? sv[k] : { status: sv[k] || 'pendente', dataExecucao: null, executada: false };
+        newSv[k] = { ...prev, status: newStatus };
+      });
       set(state => ({
         entregas: state.entregas.map(e => {
           if (e.id === entregaId) {
             return { ...e, statusVinculos: newSv };
+          }
+          return e;
+        })
+      }));
+    }
+  },
+
+  updateExecucaoVinculo: async (entregaId, chave, dataExecucao, executada) => {
+    // chave is 'profId|turmaId|disciplina'
+    const [profId, turmaId, discNome] = chave.split('|');
+
+    const allVinculos = get()._allVinculos;
+    const vinculo = allVinculos.find(v =>
+      v.professor_id === profId &&
+      v.turma_disciplinas?.turma_id === turmaId &&
+      v.turma_disciplinas?.nome === discNome
+    );
+    if (!vinculo) return;
+
+    const updatePayload = {
+      executada,
+      data_execucao: executada ? (dataExecucao || null) : null
+    };
+
+    const { error } = await supabase.from('entrega_status')
+      .update(updatePayload)
+      .eq('entrega_id', entregaId)
+      .eq('vinculo_id', vinculo.id);
+
+    if (!error) {
+      set(state => ({
+        entregas: state.entregas.map(e => {
+          if (e.id === entregaId) {
+            const prev = e.statusVinculos?.[chave];
+            const prevObj = typeof prev === 'object' ? prev : { status: prev || 'pendente', dataExecucao: null, executada: false };
+            return {
+              ...e,
+              statusVinculos: {
+                ...e.statusVinculos,
+                [chave]: {
+                  ...prevObj,
+                  executada,
+                  dataExecucao: executada ? (dataExecucao || null) : null
+                }
+              }
+            };
           }
           return e;
         })
@@ -977,19 +1034,18 @@ export const useAppStore = create((set, get) => ({
   // ============================================================
   // PUBLIC DATA (for PortalPublico - no auth required)
   // ============================================================
-  fetchPublicData: async () => {
-    if (!supabase) {
+  fetchPublicData: async (userId) => {
+    if (!supabase || !userId) {
       set({ loading: false });
       return;
     }
-    const [arquivosRes, eventosRes] = await Promise.all([
-      supabase.from('arquivos').select('*').eq('is_public', true).order('created_at', { ascending: false }),
-      supabase.from('eventos').select('*').order('data')
+    const [arquivosRes, eventosRes, profileRes] = await Promise.all([
+      supabase.from('arquivos').select('*').eq('user_id', userId).eq('is_public', true).order('created_at', { ascending: false }),
+      supabase.from('eventos').select('*').eq('user_id', userId).order('data'),
+      supabase.from('profiles').select('*').eq('id', userId).single()
     ]);
 
-    // Also try to fetch profile for branding (public policy needed or fallback)
-    const { data: profiles } = await supabase.from('profiles').select('*').limit(1);
-    const profile = profiles?.[0];
+    const profile = profileRes.data;
 
     set({
       arquivos: (arquivosRes.data || []).map(a => ({

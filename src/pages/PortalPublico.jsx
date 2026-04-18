@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { Download, CalendarDays, AlertCircle, School, Loader2 } from 'lucide-react';
 import './PortalPublico.css';
 
 const PortalPublico = () => {
+  const { userId } = useParams();
   const { arquivos, eventos, perfil, fetchPublicData } = useAppStore();
   const [activeTab, setActiveTab] = useState('arquivos');
   const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  // Fetch public data from Supabase on mount (no auth required)
+  // Fetch public data scoped to this user
   useEffect(() => {
     const loadData = async () => {
-      await fetchPublicData();
+      if (!userId) {
+        setNotFound(true);
+        setIsLoading(false);
+        return;
+      }
+      await fetchPublicData(userId);
       setIsLoading(false);
     };
     loadData();
-  }, []);
+  }, [userId]);
 
   // Matemática para identificar eventos do futuro/hoje
   const today = new Date();
@@ -39,6 +47,18 @@ const PortalPublico = () => {
       <div className="portal-mobile-wrapper" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <Loader2 size={32} className="animate-spin" style={{ color: 'var(--primary-purple, #7c3aed)', animation: 'spin 1s linear infinite' }} />
         <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  if (notFound || !perfil.nome) {
+    return (
+      <div className="portal-mobile-wrapper" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', gap: '1rem', padding: '2rem' }}>
+        <AlertCircle size={48} style={{ color: '#d97706', opacity: 0.7 }} />
+        <h2 style={{ margin: 0, fontSize: '1.3rem', color: '#1f2937', textAlign: 'center' }}>Portal não encontrado</h2>
+        <p style={{ margin: 0, color: '#6b7280', textAlign: 'center', maxWidth: 360 }}>
+          O link deste portal pode estar incorreto ou o perfil não existe. Solicite o link correto ao seu(a) coordenador(a).
+        </p>
       </div>
     );
   }

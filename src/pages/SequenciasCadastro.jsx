@@ -75,7 +75,7 @@ const SequenciasCadastro = () => {
             entregas.map(entrega => {
               const sv = entrega.statusVinculos || {};
               const totalVinculos = Object.keys(sv).length;
-              const entregueVinculos = Object.values(sv).filter(s => s === 'entregue').length;
+              const entregueVinculos = Object.values(sv).filter(v => (typeof v === 'object' ? v.status : v) === 'entregue').length;
               const prazoPassou = isPrazoPassed(entrega.prazo);
               const diasRestantes = getDaysUntil(entrega.prazo);
 

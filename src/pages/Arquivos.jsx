@@ -6,7 +6,7 @@ import { Folder, Link as LinkIcon, Download, Search, Plus, Trash2, Copy, Share2,
 import './Arquivos.css';
 
 const Arquivos = () => {
-  const { arquivos, handleAddArquivo, handleRemoverArquivo } = useAppStore();
+  const { arquivos, handleAddArquivo, handleRemoverArquivo, user } = useAppStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -41,7 +41,7 @@ const Arquivos = () => {
   };
 
   const copyPortalLink = () => {
-    const portalUrl = `${window.location.origin}/portal`;
+    const portalUrl = `${window.location.origin}/portal/${user?.id || ''}`;
     navigator.clipboard.writeText(portalUrl).then(() => {
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 3000);

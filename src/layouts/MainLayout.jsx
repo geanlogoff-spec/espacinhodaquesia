@@ -3,6 +3,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
+import DailyPopup from '../components/DailyPopup';
 import { Menu } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import './MainLayout.css';
@@ -63,6 +64,7 @@ const MainLayout = () => {
           <Outlet />
         </main>
       </div>
+      <DailyPopup />
     </div>
   );
 };

@@ -33,12 +33,12 @@ const Sequencias = () => {
   // Helper Stats
   const entregues = entregas.reduce((acc, ent) => {
       const sv = ent.statusVinculos || {};
-      return acc + Object.values(sv).filter(s => s === 'entregue').length;
+      return acc + Object.values(sv).filter(v => (typeof v === 'object' ? v.status : v) === 'entregue').length;
   }, 0);
   
   const pendentes = entregas.reduce((acc, ent) => {
       const sv = ent.statusVinculos || {};
-      return acc + Object.values(sv).filter(s => s === 'pendente').length;
+      return acc + Object.values(sv).filter(v => (typeof v === 'object' ? v.status : v) === 'pendente').length;
   }, 0);
 
   return (
@@ -78,7 +78,8 @@ const Sequencias = () => {
             entregas.map(entrega => {
               const sv = entrega.statusVinculos || {};
               const totalVinc = Object.keys(sv).length;
-              const entregouCount = Object.values(sv).filter(s => s === 'entregue').length;
+              const getS = (v) => typeof v === 'object' ? v.status : v;
+              const entregouCount = Object.values(sv).filter(v => getS(v) === 'entregue').length;
               const isExpanded = expandedId === entrega.id;
 
               return (
@@ -117,8 +118,8 @@ const Sequencias = () => {
                           {professores.map(prof => {
                              const profKeys = Object.keys(sv).filter(k => k.startsWith(`${prof.id}|`));
                              if (profKeys.length === 0) return null;
-                             const allEntregue = profKeys.every(k => sv[k] === 'entregue');
-                             const entregueCount = profKeys.filter(k => sv[k] === 'entregue').length;
+                             const allEntregue = profKeys.every(k => getS(sv[k]) === 'entregue');
+                             const entregueCount = profKeys.filter(k => getS(sv[k]) === 'entregue').length;
                              return (
                                <tr key={prof.id}>
                                  <td style={{fontWeight: 700}}>{prof.nome}</td>

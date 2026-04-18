@@ -36,7 +36,8 @@ const Relatorios = () => {
           Object.entries(sv).forEach(([k, v]) => {
             if (k.startsWith(`${prof.id}|`)) {
               totalVincSD++;
-              if (v === 'entregue') entregouSD++;
+              const st = typeof v === 'object' ? v.status : v;
+              if (st === 'entregue') entregouSD++;
             }
           });
       });
@@ -90,9 +91,10 @@ const Relatorios = () => {
   
   entregas.forEach(ent => {
       const sv = ent.statusVinculos || {};
-      Object.values(sv).forEach(status => {
+      Object.values(sv).forEach(val => {
            amostraSDTotal++;
-           if(status === 'entregue') amostraSDEntregue++;
+           const st = typeof val === 'object' ? val.status : val;
+           if(st === 'entregue') amostraSDEntregue++;
            else amostraSDPendente++;
       });
   });

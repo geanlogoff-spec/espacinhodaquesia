@@ -19,6 +19,14 @@ const DailyPopup = () => {
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
+  // Dynamic greeting based on current hour
+  const getGreeting = () => {
+    const hour = today.getHours();
+    if (hour >= 5 && hour < 12) return 'Bom dia';
+    if (hour >= 12 && hour < 18) return 'Boa tarde';
+    return 'Boa noite';
+  };
+
   // Format today for display
   const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
   const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -126,7 +134,7 @@ const DailyPopup = () => {
             </div>
             <div>
               <h3 className="daily-popup-title">
-                Bom dia, {perfil.nome}! {perfil.emoji}
+                {getGreeting()}, {perfil.nome}! {perfil.emoji}
               </h3>
               <p className="daily-popup-date">
                 <Clock size={13} /> {todayFormatted}

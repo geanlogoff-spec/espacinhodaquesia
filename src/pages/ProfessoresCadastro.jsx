@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
 import { Users, Plus, X, CheckCircle2, Pencil, School, GraduationCap, BookOpen, Phone, ChevronDown, ChevronUp, Trash2, Cake } from 'lucide-react';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import './Professores.css';
 
 const ProfessoresCadastro = () => {
@@ -13,6 +14,7 @@ const ProfessoresCadastro = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [editingProf, setEditingProf] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   // vinculos: [{ turmaId: string, disciplinas: string[] }]
   const [formData, setFormData] = useState({
     nome: '', telefone: '', dataAniversario: '', escolaId: '', vinculos: []
@@ -165,7 +167,7 @@ const ProfessoresCadastro = () => {
                     <button className="icon-btn-edit" onClick={() => openEdit(prof)} title="Editar professor">
                       <Pencil size={16} />
                     </button>
-                    <button className="icon-btn-delete" onClick={() => handleRemoverProf(prof.id)} title="Remover professor">
+                    <button className="icon-btn-delete" onClick={() => setDeleteTarget(prof)} title="Remover professor">
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -367,6 +369,18 @@ const ProfessoresCadastro = () => {
         </div>,
         document.body
       )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmDeleteModal
+        isOpen={!!deleteTarget}
+        itemName={deleteTarget?.nome}
+        title="Excluir Professor"
+        onConfirm={() => {
+          handleRemoverProf(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

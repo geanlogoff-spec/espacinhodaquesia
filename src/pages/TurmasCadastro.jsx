@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
 import { GraduationCap, Plus, X, CheckCircle2, School, Pencil, Calendar, BookOpen, Trash2 } from 'lucide-react';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import './Escola.css';
 
 // Disciplinas padrão do Ensino Fundamental Regular
@@ -24,6 +25,7 @@ const TurmasCadastro = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [editingTurma, setEditingTurma] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   // disciplinas is now an array of { nome: string, cargaHoraria: number|string }
   const [formData, setFormData] = useState({ nome: '', turno: '', anoLetivo: '', escolaId: '', disciplinas: [] });
 
@@ -141,7 +143,7 @@ const TurmasCadastro = () => {
                     <button className="icon-btn-edit" onClick={() => openEdit(turma)} title="Editar turma">
                       <Pencil size={16} />
                     </button>
-                    <button className="icon-btn-delete" onClick={() => handleRemoverTurma(turma.id)} title="Remover turma">
+                    <button className="icon-btn-delete" onClick={() => setDeleteTarget(turma)} title="Remover turma">
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -304,6 +306,18 @@ const TurmasCadastro = () => {
         </div>,
         document.body
       )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmDeleteModal
+        isOpen={!!deleteTarget}
+        itemName={deleteTarget?.nome}
+        title="Excluir Turma"
+        onConfirm={() => {
+          handleRemoverTurma(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

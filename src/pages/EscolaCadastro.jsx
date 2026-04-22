@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import Card from '../components/Card';
 import { useAppStore } from '../store/useAppStore';
 import { School, Plus, X, CheckCircle2, MapPin, Phone, Mail, Pencil, Trash2 } from 'lucide-react';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import './Escola.css';
 
 const EscolaCadastro = () => {
@@ -10,6 +11,7 @@ const EscolaCadastro = () => {
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingEscola, setEditingEscola] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [formData, setFormData] = useState({ nome: '', endereco: '', telefone: '', email: '', diretor: '' });
 
   const resetForm = () => {
@@ -83,7 +85,7 @@ const EscolaCadastro = () => {
                   <button className="icon-btn-edit" onClick={() => openEdit(escola)} title="Editar escola">
                     <Pencil size={16} />
                   </button>
-                  <button className="icon-btn-delete" onClick={() => handleRemoverEscola(escola.id)} title="Remover escola">
+                  <button className="icon-btn-delete" onClick={() => setDeleteTarget(escola)} title="Remover escola">
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -165,6 +167,18 @@ const EscolaCadastro = () => {
         </div>,
         document.body
       )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmDeleteModal
+        isOpen={!!deleteTarget}
+        itemName={deleteTarget?.nome}
+        title="Excluir Escola"
+        onConfirm={() => {
+          handleRemoverEscola(deleteTarget.id);
+          setDeleteTarget(null);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

@@ -573,33 +573,71 @@ export const useAppStore = create((set, get) => ({
 
     await supabase.from('professores').update(updatePayload).eq('id', id);
 
-    // If vinculos changed, rebuild them
+    // If vinculos changed, rebuild them smartly to avoid losing data
     if (updatedData.vinculos) {
-      // Delete existing vinculos
-      await supabase.from('professor_vinculos').delete().eq('professor_id', id);
+      // 1. Obter vínculos atuais
+      const { data: existingVinculos } = await supabase.from('professor_vinculos')
+        .select('id, turma_disciplina_id')
+        .eq('professor_id', id);
 
-      // Re-create vinculos
       const turmas = get().turmas;
-      const vinculosToInsert = [];
+      const proposedVinculos = [];
+      
       updatedData.vinculos.forEach(v => {
         const turma = turmas.find(t => String(t.id) === String(v.turmaId));
         if (!turma) return;
         (v.disciplinas || []).forEach(discNome => {
           const disc = turma.disciplinas.find(d => d.nome === discNome);
           if (disc) {
-            vinculosToInsert.push({
-              professor_id: id,
-              turma_disciplina_id: disc.id
+            proposedVinculos.push({
+              turma_disciplina_id: disc.id,
+              professor_id: id
             });
           }
         });
       });
 
+      const toDelete = [];
+      const toKeep = [];
 
-      if (vinculosToInsert.length > 0) {
-        const { error: vinculoError } = await supabase.from('professor_vinculos').insert(vinculosToInsert);
+      (existingVinculos || []).forEach(ev => {
+        const stillExists = proposedVinculos.some(pv => pv.turma_disciplina_id === ev.turma_disciplina_id);
+        if (!stillExists) {
+          toDelete.push(ev.id);
+        } else {
+          toKeep.push(ev.turma_disciplina_id);
+        }
+      });
+
+      const toInsert = proposedVinculos.filter(pv => !toKeep.includes(pv.turma_disciplina_id));
+
+      if (toDelete.length > 0) {
+        await supabase.from('professor_vinculos').delete().in('id', toDelete);
+      }
+
+      if (toInsert.length > 0) {
+        const { error: vinculoError, data: insertedVinculos } = await supabase.from('professor_vinculos').insert(toInsert).select('*, turma_disciplinas(*)');
         if (vinculoError && import.meta.env.DEV) {
             console.error("handleEditProf - Erro ao inserir professor_vinculos:", vinculoError);
+        }
+
+        if (insertedVinculos && insertedVinculos.length > 0) {
+          const entregas = get().entregas;
+          if (entregas.length > 0) {
+            const statusToInsert = [];
+            entregas.forEach(entrega => {
+              insertedVinculos.forEach(v => {
+                statusToInsert.push({
+                  entrega_id: entrega.id,
+                  vinculo_id: v.id,
+                  status: 'pendente'
+                });
+              });
+            });
+            if (statusToInsert.length > 0) {
+              await supabase.from('entrega_status').insert(statusToInsert);
+            }
+          }
         }
       }
     }

@@ -7,7 +7,7 @@ import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const { tarefas, eventos, perfil, handleAtualizarPerfil, handleLogout, isProfileModalOpen, setIsProfileModalOpen } = useAppStore();
+  const { tarefas, eventos, perfil, user, handleAtualizarPerfil, handleLogout, isProfileModalOpen, setIsProfileModalOpen } = useAppStore();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
@@ -51,7 +51,9 @@ const Header = () => {
   };
 
   const openPortalInNewTab = () => {
-     window.open('/portal', '_blank');
+     if (user?.id) {
+       window.open(`/portal/${user.id}`, '_blank');
+     }
   };
 
   return (

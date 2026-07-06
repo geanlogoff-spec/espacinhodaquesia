@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
-import { Eye, EyeOff, School, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
 import './Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { handleLogin, perfil } = useAppStore();
+  const { handleLogin } = useAppStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,57 +49,73 @@ const Login = () => {
   };
 
   return (
-    <div className="login-wrapper animate-fade-in">
-      
-      {/* Lado Esquerdo - Branding Inspirado na Imagem */}
-      <div className="login-brand-side">
-         <div className="brand-header">
-           <School size={36} color="white" />
-           <span className="brand-name">Espacinho da Quesia</span>
-         </div>
-         
-         <div className="brand-content">
-           <h1>Gerencie turmas, tarefas e a evolução pedagógica.</h1>
-         </div>
-         
-         {/* Espaço para ilustração estilo 3D (Substituído por arte CSS para evitar links quebrados) */}
-         <div className="illustration-placeholder">
-            <div className="abstract-art">
-               <div className="shape circle-1"></div>
-               <div className="shape square-1"></div>
-               <div className="shape triangle-1"></div>
-            </div>
-         </div>
+    <div className="login-wrapper">
+
+      {/* Floating educational icons */}
+      <div className="login-floating-icons">
+        <span className="floating-icon">📚</span>
+        <span className="floating-icon">✏️</span>
+        <span className="floating-icon">🎓</span>
+        <span className="floating-icon">📐</span>
+        <span className="floating-icon">🌸</span>
+        <span className="floating-icon">📝</span>
+        <span className="floating-icon">🎒</span>
+        <span className="floating-icon">📖</span>
+        <span className="floating-icon">🏫</span>
+        <span className="floating-icon">💡</span>
       </div>
       
-      {/* Lado Direito - Formulário Clean */}
-      <div className="login-form-side">
-         <div className="form-container">
-           
-           <div className="form-header">
-              <h2>Bem-vinda!</h2>
-           </div>
+      {/* Main split card */}
+      <div className="login-split">
+        
+        {/* Left — Brand identity */}
+        <div className="login-brand-side">
+          <div className="brand-logo-circle">
+            <span className="brand-emoji">👸</span>
+          </div>
 
-           {errorMsg && (
-             <div className="login-error-banner" style={{
-               background: 'rgba(239, 68, 68, 0.1)',
-               border: '1px solid rgba(239, 68, 68, 0.3)',
-               borderRadius: '12px',
-               padding: '0.8rem 1rem',
-               marginBottom: '1rem',
-               display: 'flex',
-               alignItems: 'center',
-               gap: '0.6rem',
-               color: '#ef4444',
-               fontSize: '0.9rem'
-             }}>
-               <AlertCircle size={18} />
-               <span>{errorMsg}</span>
-             </div>
-           )}
-           
-           <form className="auth-form" onSubmit={onSubmit}>
+          <h1 className="brand-title">Espacinho da Quesia</h1>
+          <p className="brand-subtitle">
+            Gestão escolar com carinho, organização e excelência pedagógica.
+          </p>
+
+          <div className="brand-features">
+            <span className="feature-tag">📋 Turmas</span>
+            <span className="feature-tag">👩‍🏫 Professores</span>
+            <span className="feature-tag">📊 Relatórios</span>
+            <span className="feature-tag">📅 Calendário</span>
+            <span className="feature-tag">📖 Sequências</span>
+          </div>
+
+          <div className="brand-sparkles">
+            <span className="sparkle-dot"></span>
+            <span className="sparkle-dot"></span>
+            <span className="sparkle-dot"></span>
+            <span className="sparkle-dot"></span>
+            <span className="sparkle-dot"></span>
+          </div>
+        </div>
+
+        {/* Right — Login form */}
+        <div className="login-form-side">
+          <div className="form-container">
+            
+            <div className="form-welcome">
+              <span className="welcome-emoji">✨</span>
+              <h2>Bem-vinda de volta!</h2>
+              <p>Acesse sua plataforma de gestão escolar</p>
+            </div>
+
+            {errorMsg && (
+              <div className="login-error-banner">
+                <AlertCircle size={18} />
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            <form className="auth-form" onSubmit={onSubmit}>
               <div className="form-group-login">
+                <Mail size={18} className="input-icon" />
                 <input 
                   type="email" 
                   placeholder="Endereço de Email"
@@ -111,9 +127,10 @@ const Login = () => {
               </div>
 
               <div className="form-group-login">
+                <Lock size={18} className="input-icon" />
                 <input 
                   type={showPassword ? 'text' : 'password'} 
-                  placeholder="Senha"
+                  placeholder="Sua Senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
@@ -130,17 +147,26 @@ const Login = () => {
               </div>
 
               <button 
-                 type="submit" 
-                 className={`btn-auth ${isLoading ? 'loading' : ''}`}
-                 disabled={isLoading}
+                type="submit" 
+                className={`btn-auth ${isLoading ? 'loading' : ''}`}
+                disabled={isLoading}
               >
-                {isLoading ? 'Autenticando...' : 'Entrar na Conta'}
+                {isLoading ? (
+                  <><span className="btn-spinner"></span> Autenticando...</>
+                ) : (
+                  'Entrar na Plataforma'
+                )}
               </button>
-           </form>
-           
-         </div>
-      </div>
+            </form>
 
+            <div className="login-footer-text">
+              Feito com 💖 para o <span>Espacinho da Quesia</span>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };

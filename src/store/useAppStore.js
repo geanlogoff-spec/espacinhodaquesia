@@ -2,6 +2,29 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabaseClient';
 import { validateEscola, validateProfessor, validateArquivo, validateEntrega, sanitize } from '../lib/validation';
 
+// Helper: Fetch ALL rows from a Supabase table, paginating past the 1000-row default limit.
+// PostgREST returns at most 1000 rows per request. This function fetches in pages of 1000
+// and concatenates the results so no data is silently lost.
+async function fetchAllRows(query) {
+  const PAGE_SIZE = 1000;
+  let allData = [];
+  let from = 0;
+  let keepGoing = true;
+
+  while (keepGoing) {
+    const { data, error } = await query.range(from, from + PAGE_SIZE - 1);
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    allData = allData.concat(data);
+    if (data.length < PAGE_SIZE) {
+      keepGoing = false;
+    } else {
+      from += PAGE_SIZE;
+    }
+  }
+  return allData;
+}
+
 
 // Helper: Transform relational DB data into the flat format the UI expects for professors
 // DB: professores + professor_vinculos + turma_disciplinas + registro_aulas
@@ -191,9 +214,10 @@ export const useAppStore = create((set, get) => ({
         supabase.from('turma_disciplinas').select('*'),
         supabase.from('professores').select('*').order('nome'),
         supabase.from('professor_vinculos').select('*, turma_disciplinas(*)'),
-        supabase.from('registro_aulas').select('*'),
+        // registro_aulas and entrega_status can exceed 1000 rows — fetch ALL pages
+        fetchAllRows(supabase.from('registro_aulas').select('*')),
         supabase.from('entregas').select('*').order('created_at', { ascending: false }),
-        supabase.from('entrega_status').select('*'),
+        fetchAllRows(supabase.from('entrega_status').select('*')),
         supabase.from('eventos').select('*').order('data'),
         supabase.from('tarefas').select('*').order('created_at'),
         supabase.from('notas').select('*').order('created_at'),
@@ -234,7 +258,9 @@ export const useAppStore = create((set, get) => ({
 
       // Build RegistroAulas by professor
       const aulasByVinculo = {};
-      (registroAulasRes.data || []).forEach(ra => {
+      // registroAulasRes is a plain array from fetchAllRows (not { data })
+      const registroAulasData = Array.isArray(registroAulasRes) ? registroAulasRes : (registroAulasRes.data || []);
+      registroAulasData.forEach(ra => {
         if (!aulasByVinculo[ra.vinculo_id]) aulasByVinculo[ra.vinculo_id] = [];
         aulasByVinculo[ra.vinculo_id].push(ra);
       });
@@ -251,7 +277,9 @@ export const useAppStore = create((set, get) => ({
 
       // Build entregas with status
       const statusByEntrega = {};
-      (entregaStatusRes.data || []).forEach(es => {
+      // entregaStatusRes is a plain array from fetchAllRows (not { data })
+      const entregaStatusData = Array.isArray(entregaStatusRes) ? entregaStatusRes : (entregaStatusRes.data || []);
+      entregaStatusData.forEach(es => {
         if (!statusByEntrega[es.entrega_id]) statusByEntrega[es.entrega_id] = [];
         statusByEntrega[es.entrega_id].push(es);
       });
